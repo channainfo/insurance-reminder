@@ -12,3 +12,16 @@ user_attrs = { username: 'admin', password: '123456', name: 'Admin' }
 
 user = User.where(username: user_attrs[:username]).first_or_initialize
 user.update_attributes(user_attrs)
+
+
+client_attrs = [
+  {phone_number: '0975553553', family_code: '1234-984763-09826', expiration_date: '2015-03-10'},
+  {phone_number: '069860012', family_code: '1234-984763-09826', expiration_date: '2015-05-10'},
+  {phone_number: '077777457', family_code: '1234-984763-09826', expiration_date: '2015-07-10'}
+]
+
+client_attrs.each do |attrs|
+  client = Client.where(phone_number: attrs[:phone_number]).first_or_initialize
+  client.update_attributes(attrs)
+end
+
