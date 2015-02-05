@@ -5,3 +5,10 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+# Default user
+
+user_attrs = { username: 'admin', password: '123456', name: 'Admin' }
+
+user = User.where(username: user_attrs[:username]).first_or_initialize
+user.update_attributes(user_attrs)
