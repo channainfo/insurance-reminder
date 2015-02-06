@@ -27,6 +27,7 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'bootstrap-sass'
 
 gem 'typhoeus'
+gem 'simple_form'
 
 # Use Unicorn as the app server
 # gem 'unicorn'

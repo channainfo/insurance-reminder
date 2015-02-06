@@ -12,6 +12,9 @@ Rails.application.routes.draw do
 
   resources :sessions, only: [:index, :create, :destroy]
 
+  resources :call_logs, only: [:index]
+  resources :calls, only: [:index]
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
