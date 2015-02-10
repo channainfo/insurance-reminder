@@ -17,13 +17,17 @@ class Verboice
     client.save!
   end
 
-  def call(clients)
-    clients.each do |client|
-      call_a_client(client, options)
-    end
+  def bulk_call(clients)
+    options = clients.map{|client| Verboice.call_options(client)}
+    post("/bulk_call", {call: options})
   end
 
-  def call_a_client(client)
+  def call client
+    options = Verboice.call_options(client)
+    post("/call", {call: options})
+  end
+
+  def self.call_options(client)
     options = {
       channel_id: ENV['CHANNEL_ID'],
       call_flow_id: ENV['CALL_FLOW_ID'],
@@ -35,7 +39,6 @@ class Verboice
         family_code: client.family_code
       }
     }
-    post("/call", options )
   end
 
   def call_logs params = {}
@@ -46,7 +49,6 @@ class Verboice
   private
 
   def connect
-
     auth_url = build_url("/auth")
     response = Typhoeus.post(auth_url, body: { account: { email: @email, password: @password } })
     @token = JSON.parse(response.body)['auth_token']
@@ -58,7 +60,7 @@ class Verboice
   end
 
   def post(path, params)
-    Typhoeus.post(build_url(path), body: auth_params(params))
+    Typhoeus.post(build_url(path), body: JSON.generate(auth_params(params)), headers: {'content-type' => 'application/json'} )
   end
 
   def build_url(path)
