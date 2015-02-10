@@ -13,4 +13,9 @@ class Client < ActiveRecord::Base
     client = Client.where(family_code: imported_client[:family_code]).first_or_initialize
     client.update_attributes(imported_client)
   end
+
+  def self.expire_on date
+    all
+  end
+
 end

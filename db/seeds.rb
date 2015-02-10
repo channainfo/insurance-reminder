@@ -15,9 +15,10 @@ user.update_attributes(user_attrs)
 
 
 client_attrs = [
-  {phone_number: '0975553553', family_code: '1234-984763-09826', expiration_date: '2015-03-10'},
-  {phone_number: '069860012', family_code: '1234-984763-09826', expiration_date: '2015-05-10'},
-  {phone_number: '077777457', family_code: '1234-984763-09826', expiration_date: '2015-07-10'}
+  {phone_number: '0975553553', family_code: '1234-984763-09810', expiration_date: '2015-03-10'},
+  {phone_number: '069860012', family_code: '1234-984763-09811', expiration_date: '2015-05-10'},
+  {phone_number: '077777457', family_code: '1234-984763-09812', expiration_date: '2015-07-10'},
+  {phone_number: '1000', family_code: '1234-984763-09813', expiration_date: '2015-04-04'}
 ]
 
 client_attrs.each do |attrs|

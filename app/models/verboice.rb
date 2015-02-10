@@ -1,13 +1,44 @@
 class Verboice
 
+  def self.connect
+    @@instance ||= Verboice.new(ENV['EMAIL'], ENV['PASSWORD'])
+  end
+
   def initialize(email, password)
     @email = email
     @password = password
     connect
   end
 
-  def enqueue_call(address, channel)
-    post("/call", { address: address, channel: channel })
+  def retry_call(client)
+    call_a_client(client)
+    
+    client.number_retry +=1
+    client.save!
+  end
+
+  def bulk_call(clients)
+    options = clients.map{|client| Verboice.call_options(client)}
+    post("/bulk_call", {call: options})
+  end
+
+  def call client
+    options = Verboice.call_options(client)
+    post("/call", {call: options})
+  end
+
+  def self.call_options(client)
+    options = {
+      channel_id: ENV['CHANNEL_ID'],
+      call_flow_id: ENV['CALL_FLOW_ID'],
+      address: client.phone_number,
+      vars: {
+        year: client.expiration_date.year,
+        month: client.expiration_date.month,
+        day: client.expiration_date.day,
+        family_code: client.family_code
+      }
+    }
   end
 
   def call_logs params = {}
@@ -29,7 +60,7 @@ class Verboice
   end
 
   def post(path, params)
-    Typhoeus.post(build_url(path), body: auth_params(params))
+    Typhoeus.post(build_url(path), body: JSON.generate(auth_params(params)), headers: {'content-type' => 'application/json'} )
   end
 
   def build_url(path)
