@@ -1,0 +1,31 @@
+<%= page_title "Call list" %>
+<%= paginate @calls %>
+
+<table class='table table-strip' >
+  <thead>
+    <tr>
+      <td> No </td>
+      <td>Family Code</td>
+      <td>Status</td>
+      <td>Retries</td>
+      <td>Main</td>
+      <td>Phone number</td>
+      <td></td>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @calls.each_with_index do |call, index| %>
+      <tr>
+        <td><%= index_in_paginate(index) %></td>
+        <td><%= call.client.family_code %></td>
+        <td><%= call.status %></td>
+        <td><%= call.calls_count %></td>
+        <td><%= call.main ? call.main.phone_number : '' %></td>
+        <td><%= call.phone_number %></td>
+        <td></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= paginate @calls %>

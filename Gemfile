@@ -28,6 +28,7 @@ gem 'bootstrap-sass'
 
 gem 'typhoeus'
 gem 'simple_form'
+gem 'kaminari'
 
 # Use Unicorn as the app server
 # gem 'unicorn'

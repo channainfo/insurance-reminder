@@ -11,7 +11,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150209101729) do
+ActiveRecord::Schema.define(version: 20150211042151) do
+
+  create_table "calls", force: :cascade do |t|
+    t.integer  "client_id",        limit: 4
+    t.integer  "main_id",          limit: 4
+    t.string   "status",           limit: 255, default: "Pending"
+    t.date     "expired_date"
+    t.string   "phone_number",     limit: 255
+    t.datetime "update_status_at"
+    t.integer  "calls_count",      limit: 4,   default: 0
+    t.datetime "created_at",                                       null: false
+    t.datetime "updated_at",                                       null: false
+  end
+
+  add_index "calls", ["client_id"], name: "index_calls_on_client_id", using: :btree
+  add_index "calls", ["main_id"], name: "index_calls_on_main_id", using: :btree
 
   create_table "clients", force: :cascade do |t|
     t.string   "phone_number",    limit: 255

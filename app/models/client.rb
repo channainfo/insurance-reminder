@@ -1,5 +1,6 @@
 class Client < ActiveRecord::Base
   validates :family_code, uniqueness: true
+  has_many :calls
 
   def self.import(imported_clients)
     ActiveRecord::Base.transaction do

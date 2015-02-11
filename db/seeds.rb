@@ -26,3 +26,21 @@ client_attrs.each do |attrs|
   client.update_attributes(attrs)
 end
 
+
+Client.all.each do |client|
+  (0..5).each do
+    expired_date = (0..10).to_a.sample.days.ago
+    call = client.calls.build(expired_date: expired_date, phone_number: client.phone_number)
+    call.save!
+
+    (0..5).to_a.sample.times.each.each do |index|
+      expired_date = (0..10).to_a.sample.days.ago
+      retry_call = client.calls.build(expired_date: expired_date,
+                                      phone_number: client.phone_number,
+                                      main: call,
+                                      status: Call::STATUS_ERROR)
+      retry_call.save!
+  end
+end
+
+end

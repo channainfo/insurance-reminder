@@ -3,6 +3,10 @@ module ApplicationHelper
     content_for(:title) { title + " - " + ENV['APP_NAME'] }
   end
 
+  def index_in_paginate(index)
+    index + Kaminari.config.default_per_page * params[:page].to_i
+  end
+
   def flash_config
     config = {key: '', value: ''}
     flash.map do |key, value|
