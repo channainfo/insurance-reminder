@@ -1,6 +1,16 @@
 require 'rails_helper'
 
 RSpec.describe Client, :type => :model do
+  describe '.will_expire_on' do
+    it 'return clients that expired date match the date' do
+      expiration_date = Date.new(2050,11 , 9)
+      create(:client, expiration_date: expiration_date)
+      create(:client, expiration_date: expiration_date)
+      create(:client, expiration_date: expiration_date)
+      expect(Client.will_expire_on(expiration_date).count).to eq 3
+    end
+  end
+
   describe '.create_or_update_for client from webservices' do
     let!(:client) { create(:client, family_code: '0123-123456-12345', phone_number: '0120009000')}
     context 'new client' do

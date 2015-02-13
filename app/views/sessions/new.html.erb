@@ -1,6 +1,6 @@
 <% content_for(:title) { "Login" } %>
 
-<%= form_tag sessions_path, role: 'form', class: 'form', style: 'padding: 15px;' do %>
+<%= form_tag sessions_path, role: 'form', class: 'form' do %>
   <div class='input-row'>
     <%= text_field_tag :username, params[:username], class: 'form-control', placeholder: 'User name' %>
   </div>

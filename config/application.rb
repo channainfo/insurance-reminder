@@ -22,5 +22,6 @@ module RemindersAgent
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
+    Rails::Timeago.default_options limit: proc { 25.days.ago }, nojs: true
   end
 end

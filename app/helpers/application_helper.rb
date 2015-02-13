@@ -4,7 +4,8 @@ module ApplicationHelper
   end
 
   def index_in_paginate(index)
-    index + Kaminari.config.default_per_page * params[:page].to_i
+    page = params[:page].to_i >1 ? params[:page].to_i : 1
+    index + Kaminari.config.default_per_page * (page - 1 )
   end
 
   def flash_config

@@ -5,11 +5,13 @@
   <thead>
     <tr>
       <td> No </td>
+      <td> ID </td>
       <td>Family Code</td>
       <td>Status</td>
       <td>Retries</td>
       <td>Main</td>
       <td>Phone number</td>
+      <td>Call at</td>
       <td></td>
     </tr>
   </thead>
@@ -17,13 +19,19 @@
   <tbody>
     <% @calls.each_with_index do |call, index| %>
       <tr>
-        <td><%= index_in_paginate(index) %></td>
+        <td><%= index_in_paginate(index+1) %></td>
+        <td><%= call.id %></td>
         <td><%= call.client.family_code %></td>
         <td><%= call.status %></td>
         <td><%= call.calls_count %></td>
-        <td><%= call.main ? call.main.phone_number : '' %></td>
+        <td><%= call.main ? call.main.id : '' %></td>
         <td><%= call.phone_number %></td>
-        <td></td>
+        <td><%= timeago_tag(call.created_at) %></td>
+        <td>
+          <% if call.retryable? %>
+            <%= link_to 'Retry', retry_call_path(call), method: 'PUT' %>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>

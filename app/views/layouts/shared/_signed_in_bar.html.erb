@@ -1,1 +1,2 @@
-<%=link_to current_user.name, sign_out_path, method: 'DELETE' %>
+<%= current_user.name %>
+<%=link_to 'Sign out' , sign_out_path, method: 'DELETE' %>

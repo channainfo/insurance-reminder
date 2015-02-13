@@ -29,6 +29,7 @@ gem 'bootstrap-sass'
 gem 'typhoeus'
 gem 'simple_form'
 gem 'kaminari'
+gem 'rails-timeago'
 
 # Use Unicorn as the app server
 # gem 'unicorn'

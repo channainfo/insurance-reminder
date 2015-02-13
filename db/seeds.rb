@@ -15,10 +15,10 @@ user.update_attributes(user_attrs)
 
 
 client_attrs = [
-  {phone_number: '0975553553', family_code: '1234-984763-09810', expiration_date: '2015-03-10'},
-  {phone_number: '069860012', family_code: '1234-984763-09811', expiration_date: '2015-05-10'},
-  {phone_number: '077777457', family_code: '1234-984763-09812', expiration_date: '2015-07-10'},
-  {phone_number: '1000', family_code: '1234-984763-09813', expiration_date: '2015-04-04'}
+  {phone_number: '0975553553', family_code: '1234-984763-09810', expiration_date: '2015-11-9'},
+  {phone_number: '069860012', family_code: '1234-984763-09811', expiration_date: '2015-11-9'},
+  {phone_number: '077777457', family_code: '1234-984763-09812', expiration_date: '2015-11-9'},
+  {phone_number: '1000', family_code: '1234-984763-09813', expiration_date: '2015-11-9'}
 ]
 
 client_attrs.each do |attrs|
@@ -30,7 +30,7 @@ end
 Client.all.each do |client|
   (0..5).each do
     expired_date = (0..10).to_a.sample.days.ago
-    call = client.calls.build(expired_date: expired_date, phone_number: client.phone_number)
+    call = client.calls.build(expired_date: expired_date, phone_number: client.phone_number, status: Call::STATUS_ERROR)
     call.save!
 
     (0..5).to_a.sample.times.each.each do |index|
