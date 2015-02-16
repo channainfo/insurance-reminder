@@ -1,6 +1,41 @@
 <%= page_title "Call list" %>
 <%= paginate @calls %>
 
+
+<fieldset>
+  <legend> Filter</legend>
+  <%= form_tag '/search', method: 'GET' do |f| %>
+    
+    <div class='input-row col-lg-2'>
+      <%= label_tag :family_code %>
+      <%= text_field_tag :family_code, params[:family_code], class: 'form-control' %>
+    </div>
+
+    <div class='input-row col-lg-2'>
+      <%= label_tag :status, 'Call Status' %>
+      <%= select_tag :status, options_for_select(Call::STATUSES.map{|status| [status, status] }, params[:status]),
+                     class: 'form-control', include_blank: true %>
+    </div>
+
+    <div class='input-row col-lg-2'>
+      <%= label_tag :expiration_date_start %>
+      <%= text_field_tag :expiration_date_start, params[:expiration_date_start], class: 'form-control' %>
+    </div>
+
+    <div class='input-row col-lg-2'>
+      <%= label_tag :expiration_date_end %>
+      <%= text_field_tag :expiration_date_end, params[:expiration_date_end], class: 'form-control' %>
+    </div>
+
+    <div class='input-row col-lg-2'>
+      <button class='btn btn-info' style='margin-top: 25px;'>
+        <i class='glyphicon glyphicon-search'> </i> Search
+      </button>
+    </div>
+  <% end %>
+</fieldset>
+<br />
+
 <table class='table table-strip' >
   <thead>
     <tr>

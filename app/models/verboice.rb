@@ -19,6 +19,7 @@ class Verboice
       call = client.calls.build( expiration_date: client.expiration_date,
                                  phone_number: client.phone_number,
                                  verboice_call_id: call_attrs[:call_id],
+                                 family_code: client.family_code,
                                  status: Call::STATUS_PENDING)
       call.save!
     end
@@ -34,6 +35,7 @@ class Verboice
     call = client.calls.build( expiration_date: call.expiration_date,
                                phone_number: call.phone_number,
                                verboice_call_id: verboice_call[:call_id],
+                               family_code: call.family_code,
                                status: Call::STATUS_PENDING,
                                main: call)
     call.save
@@ -49,6 +51,7 @@ class Verboice
     call = client.calls.build( expiration_date: client.expiration_date,
                                phone_number: client.phone_number,
                                verboice_call_id: verboice_call[:call_id],
+                               family_code: client.family_code,
                                status: Call::STATUS_PENDING)
     call.save
   end

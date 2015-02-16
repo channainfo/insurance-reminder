@@ -33,13 +33,17 @@ clients = Client.all
   client = clients[(0..3).to_a.sample]
   expired_date = (0..10).to_a.sample.days.ago
 
-  call = client.calls.build(expiration_date: expired_date, phone_number: client.phone_number, status: Call::STATUS_ERROR)
+  call = client.calls.build(expiration_date: expired_date,
+                            phone_number: client.phone_number,
+                            family_code: client.family_code,
+                            status: Call::STATUS_ERROR)
   call.save!
 
   (0..5).to_a.sample.times.each.each do |index|
     expired_date = (0..10).to_a.sample.days.ago
     retry_call = client.calls.build(expiration_date: expired_date,
                                     phone_number: client.phone_number,
+                                    family_code: client.family_code,
                                     main: call,
                                     status: Call::STATUS_ERROR)
     retry_call.save!

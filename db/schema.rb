@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150216031941) do
+ActiveRecord::Schema.define(version: 20150216092808) do
 
   create_table "calls", force: :cascade do |t|
     t.integer  "client_id",        limit: 4
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 20150216031941) do
     t.datetime "created_at",                                       null: false
     t.datetime "updated_at",                                       null: false
     t.integer  "verboice_call_id", limit: 4
+    t.string   "family_code",      limit: 255
   end
 
   add_index "calls", ["client_id"], name: "index_calls_on_client_id", using: :btree
