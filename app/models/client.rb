@@ -2,12 +2,13 @@ class Client < ActiveRecord::Base
   validates :family_code, uniqueness: true
   has_many :calls
 
-  include VerboiceParameterize
+  include VerboiceParameterize, ShpaTransform
 
   def self.import(imported_clients)
     ActiveRecord::Base.transaction do
       imported_clients.each do |imported_client|
-        self.create_or_update_for(imported_client)
+        client_params = to_client_params(imported_client)
+        self.create_or_update_for(client_params)
       end
     end
   end
@@ -47,6 +48,12 @@ class Client < ActiveRecord::Base
                              call_log_id: response[:call_log_id],
                              status: Call::STATUS_PENDING)
     call.save
+  end
+
+  def self.import_expired_shpa_clients_within number_of_day
+    shpa = Service::Shpa.new ENV['SHPA_USERNAME'], ENV['SHPA_PASSWORD']
+    clients = shpa.expired_within number_of_day
+    import(clients)
   end
 
 end
