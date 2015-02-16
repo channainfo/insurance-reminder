@@ -35,8 +35,8 @@ RSpec.describe Client, :type => :model do
   describe '.import clients from web service' do
     it 'create or update the client on local database' do
       imported_clients = [
-        {family_code: '4433-123456-22222', phone_number: '097552222', expiration_date: '2010-10-10'},
-        {family_code: '4433-123456-33333', phone_number: '097553333', expiration_date: '2012-11-11'}
+        { 'tel' => '097552222', 'family' => {'id' => 1, 'code' => '4433-123456-22222'}, 'contracts' => [{'expiry_date' => '2010-10-10'}] },
+        { 'tel' => '097553333', 'family' => {'id' => 1, 'code' => '4433-123456-33333'}, 'contracts' => [{'expiry_date' => '2012-11-11'}] }
       ]
 
       Client.import(imported_clients)
