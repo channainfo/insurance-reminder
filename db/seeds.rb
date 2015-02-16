@@ -15,10 +15,10 @@ user.update_attributes(user_attrs)
 
 
 client_attrs = [
-  {phone_number: '0975553553', family_code: '1234-984763-09810', expiration_date: '2015-11-9'},
-  {phone_number: '069860012', family_code: '1234-984763-09811', expiration_date: '2015-11-9'},
-  {phone_number: '077777457', family_code: '1234-984763-09812', expiration_date: '2015-11-9'},
-  {phone_number: '1000', family_code: '1234-984763-09813', expiration_date: '2015-11-9'}
+  {phone_number: '0975553553', family_code: '1234-984763-09810', expiration_date: '2015-11-9', family_name: 'Visal'},
+  {phone_number: '069860012', family_code: '1234-984763-09811', expiration_date: '2015-11-9', family_name: 'Kosal'},
+  {phone_number: '077777457', family_code: '1234-984763-09812', expiration_date: '2015-11-9', family_name: 'Phirum'},
+  {phone_number: '1000', family_code: '1234-984763-09813', expiration_date: '2015-11-9', family_name: 'Sophal'}
 ]
 
 client_attrs.each do |attrs|
@@ -27,20 +27,23 @@ client_attrs.each do |attrs|
 end
 
 
-Client.all.each do |client|
-  (0..5).each do
-    expired_date = (0..10).to_a.sample.days.ago
-    call = client.calls.build(expired_date: expired_date, phone_number: client.phone_number, status: Call::STATUS_ERROR)
-    call.save!
+clients = Client.all
 
-    (0..5).to_a.sample.times.each.each do |index|
-      expired_date = (0..10).to_a.sample.days.ago
-      retry_call = client.calls.build(expired_date: expired_date,
-                                      phone_number: client.phone_number,
-                                      main: call,
-                                      status: Call::STATUS_ERROR)
-      retry_call.save!
-  end
+(0..5).each do
+  client = clients[(0..3).to_a.sample]
+  expired_date = (0..10).to_a.sample.days.ago
+
+  call = client.calls.build(expiration_date: expired_date, phone_number: client.phone_number, status: Call::STATUS_ERROR)
+  call.save!
+
+  (0..5).to_a.sample.times.each.each do |index|
+    expired_date = (0..10).to_a.sample.days.ago
+    retry_call = client.calls.build(expiration_date: expired_date,
+                                    phone_number: client.phone_number,
+                                    main: call,
+                                    status: Call::STATUS_ERROR)
+    retry_call.save!
 end
+
 
 end

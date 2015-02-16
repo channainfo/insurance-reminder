@@ -1,6 +1,6 @@
 class CallsController < ApplicationController
   def index
-    @calls = Call.includes(:client).order('created_at DESC').page(params[:page])
+    @calls = Call.main_calls.includes(:client).order('created_at DESC').page(params[:page])
   end
 
   def retry

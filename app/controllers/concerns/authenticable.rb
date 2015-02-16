@@ -18,7 +18,7 @@ module Authenticable
   end
 
   def after_signed_in_path_for(user=nil)
-    return home_path
+    root_path
   end
 
   def after_signed_out_path_for(user=nil)
