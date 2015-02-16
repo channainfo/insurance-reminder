@@ -17,10 +17,15 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <%= render 'layouts/shared/config' %>
   </head>
   <body>
-    <%= render 'layouts/shared/signed_in_bar' %>
-    <%= flash_messages %>
-    <%= yield %>
+    <div class='container'>
+      <%= render 'layouts/shared/signed_in_bar' %>
+      <%= flash_messages %>
+      <%= render 'layouts/shared/notification' %>
+      <%= yield %>
+    </div>
+    <%= yield(:footer) if content_for?(:footer) %>
   </body>
 </html>

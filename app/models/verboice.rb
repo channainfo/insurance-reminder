@@ -10,35 +10,47 @@ class Verboice
     connect
   end
 
-  def retry_call(client)
-    call_a_client(client)
-    
-    client.number_retry +=1
-    client.save!
+  def bulk_call(clients)
+    options = clients.map{|client| client.to_verboice_params}
+    response = post("/bulk_call", {call: options})
+    call_response = JSON.parse(response.body)
+    call_response.each_with_index do |call_attrs, index|
+      client = clients[index]
+      call = client.calls.build( expiration_date: client.expiration_date,
+                                 phone_number: client.phone_number,
+                                 verboice_call_id: call_attrs[:call_id],
+                                 status: Call::STATUS_PENDING)
+      call.save!
+    end
   end
 
-  def bulk_call(clients)
-    options = clients.map{|client| Verboice.call_options(client)}
-    post("/bulk_call", {call: options})
+  def retry_call(call)
+    client = call.client
+    options = client.to_verboice_params
+    options[:address] = call.phone_number
+    response = post("/call", {call: options})
+    verboice_call = JSON.parse(response.body)
+
+    call = client.calls.build( expiration_date: call.expiration_date,
+                               phone_number: call.phone_number,
+                               verboice_call_id: verboice_call[:call_id],
+                               status: Call::STATUS_PENDING,
+                               main: call)
+    call.save
+    call.status == Call::STATUS_RETRIED
+    call.save!
   end
 
   def call client
-    options = Verboice.call_options(client)
-    post("/call", {call: options})
-  end
+    options = client.to_verboice_params
+    response = post("/call", {call: options})
+    verboice_call = JSON.parse(response.body)
 
-  def self.call_options(client)
-    options = {
-      channel_id: ENV['CHANNEL_ID'],
-      call_flow_id: ENV['CALL_FLOW_ID'],
-      address: client.phone_number,
-      vars: {
-        year: client.expiration_date.year,
-        month: client.expiration_date.month,
-        day: client.expiration_date.day,
-        family_code: client.family_code
-      }
-    }
+    call = client.calls.build( expiration_date: client.expiration_date,
+                               phone_number: client.phone_number,
+                               verboice_call_id: verboice_call[:call_id],
+                               status: Call::STATUS_PENDING)
+    call.save
   end
 
   def call_logs params = {}
@@ -70,5 +82,4 @@ class Verboice
   def auth_params(params)
     params.merge({ email: @email, token: @token })
   end
-
 end

@@ -6,8 +6,6 @@ function flashNotification(){
   setNotification(Config.Flash.key, Config.Flash.value)
 }
 
-
-
 function setNotification(key, value) {
   $notification = $("#notification")
 

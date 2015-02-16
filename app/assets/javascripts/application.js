@@ -12,4 +12,9 @@
 //
 //= require jquery
 //= require jquery_ujs
+
+//= require tmpl
+//= require rails-timeago
 //= require bootstrap-sprockets
+
+//= require shared/notification
