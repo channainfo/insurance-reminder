@@ -1,0 +1,16 @@
+default: &default
+  SHPA_API_URL: 'http://192.168.1.141:3001/api/'
+
+development:
+  <<: *default
+  SHPA_USERNAME: development
+  SHPA_PASSWORD: development
+
+test:
+  <<: *default
+  SHPA_USERNAME: test
+  SHPA_PASSWORD: test
+
+production:
+  SHPA_USERNAME: production
+  SHPA_PASSWORD: production
