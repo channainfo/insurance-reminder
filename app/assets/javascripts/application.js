@@ -17,4 +17,7 @@
 //= require rails-timeago
 //= require bootstrap-sprockets
 
+//= require bootstrap-datepicker
+
 //= require shared/notification
+//= require shared/datepicker
