@@ -31,6 +31,8 @@ gem 'simple_form'
 gem 'kaminari'
 gem 'rails-timeago'
 
+gem 'rails-settings-cached'
+
 # Use Unicorn as the app server
 # gem 'unicorn'
 

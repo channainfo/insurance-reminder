@@ -17,4 +17,9 @@
 //= require rails-timeago
 //= require bootstrap-sprockets
 
+//= require lib/jquery.control-key-.1.0
+
 //= require shared/notification
+
+//= require global
+//= require settings

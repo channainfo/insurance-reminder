@@ -17,15 +17,18 @@ module ApplicationHelper
     config
   end
 
-  def flash_messages
-
-    trans = { 'alert' => 'alert-danger', 'notice' => 'alert alert-success' }
-
-    content_tag :div, class: 'notification' do
-      flash.map do |key, value|
-        content_tag 'div', value, class: "alert #{trans[key]} alert-body"
-      end.join('.').html_safe
-    end
+  def bootstrap_class_for flash_type
+    {notice: 'alert-success', error: 'alert-error', alert: 'alert-block'}[flash_type.to_sym] || flash_type.to_s
   end
 
+  def flash_messages(opts = {})
+    flash.each do |msg_type, message|
+      concat(content_tag(:div, message, class: "alert #{bootstrap_class_for(msg_type)} fade in") do 
+              concat content_tag(:button, 'x', class: "close", data: { dismiss: 'alert' })
+              concat message 
+            end)
+    end
+    nil
+  end
+ 
 end

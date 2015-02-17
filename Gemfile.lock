@@ -153,6 +153,8 @@ GEM
       rails-deprecated_sanitizer (>= 1.0.1)
     rails-html-sanitizer (1.0.1)
       loofah (~> 2.0)
+    rails-settings-cached (0.4.1)
+      rails (>= 4.0.0)
     rails-timeago (2.11.1)
       actionpack (>= 3.1)
       activesupport (>= 3.1)
@@ -252,6 +254,7 @@ DEPENDENCIES
   mysql2
   pry-rails
   rails (= 4.2.0)
+  rails-settings-cached
   rails-timeago
   rspec-rails
   sass-rails (~> 5.0)
