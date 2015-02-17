@@ -13,9 +13,13 @@ Rails.application.routes.draw do
   resources :sessions, only: [:index, :create, :destroy]
 
   resources :call_logs, only: [:index]
-  resources :calls, only: [:index] do
+  resources :calls, only: [:index, :new] do
     member do
       put 'retry'
+    end
+
+    collection do
+      get 'download_csv'
     end
   end
 

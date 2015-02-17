@@ -10,4 +10,8 @@ class CallsController < ApplicationController
     verboice.retry_call(call)
     redirect_to calls_path(), notice: "Call have been retried"
   end
+
+  def download_csv
+    
+  end
 end

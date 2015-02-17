@@ -28,4 +28,8 @@ module ApplicationHelper
     end
   end
 
+  def app_params
+    params.except(:action, :controller, :utf8)
+  end
+
 end

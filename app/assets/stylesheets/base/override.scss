@@ -4,9 +4,27 @@ fieldset {
   min-width: 0;
   padding: 0 0 15px;
   legend {
+    font-size: 110%;
   }
+}
+
+label {
+  font-weight: normal;
 }
 
 .alert{
   padding: 10px;
+}
+
+.page-header{
+  border: none;
+  font-size: 120%;
+  padding: 10px 0;
+  margin: 0;
+}
+
+.table {
+  @include border-radius(5px);
+  border: 1px solid #eee;
+  border-collapse: unset;
 }

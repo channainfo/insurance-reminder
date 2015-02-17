@@ -1,6 +1,7 @@
 <%= page_title "Call list" %>
-<%= paginate @calls %>
 
+
+<h3 class='page-header'>Reminders</h3>
 
 <fieldset>
   <legend> Filter</legend>
@@ -28,13 +29,27 @@
     </div>
 
     <div class='input-row col-lg-2'>
-      <button class='btn btn-info' style='margin-top: 25px;'>
+      <button class='btn btn-primary' style='margin-top: 25px;'>
         <i class='glyphicon glyphicon-search'> </i> Search
       </button>
     </div>
   <% end %>
 </fieldset>
 <br />
+
+<div class='clearfix' style="padding-bottom: 10px;">
+  <div class='pull-left'>
+    <%= paginate @calls, theme: 'twitter-bootstrap-3' %>
+  </div>
+  <div class='pull-right' style='margin-top: 15px;'>
+    <%= link_to download_csv_calls_path(app_params), class: 'btn btn- btn-primary' do %>
+      <i class='glyphicon glyphicon-download-alt'> </i> Download CSV
+    <% end %>
+    <%= link_to new_call_path, class: 'btn btn- btn-primary' do %>
+      <i class='glyphicon glyphicon-plus'> </i> Add Reminder
+    <% end %>
+  </div>
+</div>
 
 <table class='table table-strip' >
   <thead>
@@ -45,8 +60,7 @@
       <td>Retries</td>
       <td>Expiration date</td>
       <td>Phone number</td>
-      <td>Reminder date</td>
-      <td></td>
+      <td width="120">Reminder date</td>
     </tr>
   </thead>
 
@@ -69,4 +83,4 @@
     <% end %>
   </tbody>
 </table>
-<%= paginate @calls %>
+<%= paginate @calls, theme: 'twitter-bootstrap-3' %>
