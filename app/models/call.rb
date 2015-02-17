@@ -9,6 +9,15 @@ class Call < ActiveRecord::Base
   STATUS_RETRIED = "Retried"
   STATUSES = [STATUS_PENDING, STATUS_FAILED, STATUS_ERROR]
 
+  MAX_RETRY_NUMBER = 3
+
+  before_save :monitor_status
+
+  def monitor_status
+    if self.status == Call::STATUS_ERROR && self.calls_count > MAX_RETRY_NUMBER
+      self.status = Call::STATUS_FAILED
+    end
+  end
 
   def self.search options
     calls = where("1=1")
@@ -25,7 +34,7 @@ class Call < ActiveRecord::Base
   end
 
   def retryable?
-    main? && error?
+    main? && error? && calls_count < MAX_RETRY_NUMBER
   end
 
   def main?

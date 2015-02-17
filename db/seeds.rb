@@ -39,7 +39,7 @@ clients = Client.all
                             status: Call::STATUS_ERROR)
   call.save!
 
-  (0..5).to_a.sample.times.each.each do |index|
+  (0..Call::MAX_RETRY_NUMBER).to_a.sample.times.each.each do |index|
     expired_date = (0..10).to_a.sample.days.ago
     retry_call = client.calls.build(expiration_date: expired_date,
                                     phone_number: client.phone_number,

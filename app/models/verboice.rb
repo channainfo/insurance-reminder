@@ -32,14 +32,15 @@ class Verboice
     response = post("/call", {call: options})
     verboice_call = JSON.parse(response.body)
 
-    call = client.calls.build( expiration_date: call.expiration_date,
+    retry_call = client.calls.build( expiration_date: call.expiration_date,
                                phone_number: call.phone_number,
                                verboice_call_id: verboice_call[:call_id],
                                family_code: call.family_code,
                                status: Call::STATUS_PENDING,
                                main: call)
-    call.save
-    call.status == Call::STATUS_RETRIED
+    retry_call.save
+
+    call.status = Call::STATUS_RETRIED
     call.save!
   end
 

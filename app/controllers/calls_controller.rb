@@ -6,10 +6,8 @@ class CallsController < ApplicationController
 
   def retry
     call = Call.find(params[:id])
-    if call.retry
-      redirect_to calls_path(), notice: "Call have been retried"
-    else
-      redirect_to calls_path(), alert: "Failed to retry to call this number, please try again"
-    end
+    verboice = Verboice.connect
+    verboice.retry_call(call)
+    redirect_to calls_path(), notice: "Call have been retried"
   end
 end
