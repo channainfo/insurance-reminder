@@ -26,6 +26,10 @@ Rails.application.routes.draw do
   get 'settings' => 'settings#index'
   put 'update_settings' => 'settings#update'
 
+  get '/steps/manifest' => 'steps#manifest', defaults: { format: :xml }
+  post '/steps/notify_call_failed' => 'steps#notify_call_failed'
+  post '/steps/notify_call_success' => 'steps#notify_call_success'
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

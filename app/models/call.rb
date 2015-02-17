@@ -8,7 +8,8 @@ class Call < ActiveRecord::Base
   STATUS_FAILED  = "Failed"
   STATUS_ERROR   = "Error"
   STATUS_RETRIED = "Retried"
-  STATUSES = [STATUS_PENDING, STATUS_FAILED, STATUS_ERROR]
+  STATUS_SUCCESS = "Success"
+  STATUSES = [STATUS_PENDING, STATUS_FAILED, STATUS_ERROR, STATUS_SUCCESS]
 
   MAX_RETRY_NUMBER = 3
 
@@ -59,4 +60,15 @@ class Call < ActiveRecord::Base
   def error?
     status == Call::STATUS_ERROR
   end
+
+  def mark_as_error!
+    self.status = STATUS_ERROR
+    save
+  end
+
+  def mark_as_success!
+    self.status = STATUS_SUCCESS
+    save
+  end
+
 end
