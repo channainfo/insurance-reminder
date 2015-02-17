@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<verboice-service>
+  <name>Insurance Reminder</name>
+  <global-settings>
+    <variable name="service_domain" display-name="Service Domain" type="string"/>
+  </global-settings>
+  <steps>
+    <step name="notify_call_start"
+      display-name="Notify Call Start"
+      icon="medicalkit"
+      type="callback"
+      callback-url="http://{service_domain}/steps/notify_call_failed">
+      <settings/>
+      <response type="none"/>
+    </step>
+  </steps>
+  <steps>
+    <step name="notify_call_end"
+      display-name="Notify Call End"
+      icon="medicalkit"
+      type="callback"
+      callback-url="http://{service_domain}/steps/notify_call_success">
+      <settings/>
+      <response type="none"/>
+    </step>
+  </steps>
+</verboice-service>
