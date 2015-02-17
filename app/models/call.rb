@@ -1,3 +1,4 @@
+require 'csv'
 class Call < ActiveRecord::Base
   has_many :retries, class_name: "Call", foreign_key: 'main_id'
   belongs_to :main, class_name: "Call", counter_cache: true
@@ -27,6 +28,20 @@ class Call < ActiveRecord::Base
     calls = calls.where(['calls.expiration_date >= ?', options[:expiration_date_start]]) if options[:expiration_date_start].present?
     calls = calls.where(['calls.expiration_date <= ?', options[:expiration_date_end]]) if options[:expiration_date_end].present?
     calls
+  end
+
+  def self.to_csv
+    CSV.open(csv_file, 'wb') do |csv|
+      csv << ['Family code', 'Family name', 'Call status', 'Retries', 'Expiration date', 'Phone number', 'Reminder date']
+      find_each do |call|
+        csv << [ call.client.family_code, call.client.family_name, call.status, call.calls_count,
+                 call.expiration_date, call.phone_number, call.created_at.to_date]
+      end
+    end
+  end
+
+  def self.csv_file
+    "#{Rails.root}/tmp/call.csv"
   end
 
   def self.main_calls
