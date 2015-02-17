@@ -32,6 +32,8 @@ gem 'kaminari'
 gem 'bootstrap-kaminari-views'
 gem 'rails-timeago'
 
+gem 'rails-settings-cached'
+
 # Use Unicorn as the app server
 # gem 'unicorn'
 

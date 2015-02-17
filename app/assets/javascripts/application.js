@@ -18,6 +18,9 @@
 //= require bootstrap-sprockets
 
 //= require bootstrap-datepicker
+//= require lib/jquery.control-key-.1.0
 
 //= require shared/notification
 //= require shared/datepicker
+//= require global
+//= require settings

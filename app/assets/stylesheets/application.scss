@@ -2,6 +2,7 @@
 @import "bootstrap";
 
 @import "bootstrap-datepicker";
+@import "base/responsive";
 
 @import "base/mixin";
 @import "base/override";
@@ -10,3 +11,5 @@
 @import "shared/callout";
 
 @import "session/layout";
+
+@import "layout";

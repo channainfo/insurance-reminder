@@ -23,6 +23,9 @@ Rails.application.routes.draw do
     end
   end
 
+  get 'settings' => 'settings#index'
+  put 'update_settings' => 'settings#update'
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

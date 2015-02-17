@@ -20,12 +20,12 @@
     <%= render 'layouts/shared/config' %>
   </head>
   <body>
-    <div class='container'>
-      <%= render 'layouts/shared/signed_in_bar' %>
+    <%= render 'layouts/shared/menu' %>
+    <div class='container app-container'>
       <%= flash_messages %>
       <%= render 'layouts/shared/notification' %>
       <%= yield %>
+      <%= render 'layouts/shared/footer' %>
     </div>
-    <%= yield(:footer) if content_for?(:footer) %>
   </body>
 </html>
