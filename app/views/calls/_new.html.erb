@@ -1,0 +1,20 @@
+<div class="modal fade" id="new-reminder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">New Reminder</h4>
+      </div>
+
+      <div class="modal-body">
+        <%= form_tag calls_path, method: :post, id: 'form-add-reminder' do %>
+          <div id='alert-add-reminder' class='alert alert-warning' style='display:none'> </div>
+          <p>Please enter phone number</p>
+          <input type='text' class='form-control' name='phone_number' id='input-phone_number' />
+          <br />
+          <button id='btn-add-reminder' class='btn btn-primary'>Send call now</button>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

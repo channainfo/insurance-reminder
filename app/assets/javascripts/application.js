@@ -22,5 +22,7 @@
 
 //= require shared/notification
 //= require shared/datepicker
-//= require global
-//= require settings
+//= require shared/key_input
+
+//= require settings/form
+//= require calls/add_reminder

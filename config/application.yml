@@ -1,5 +1,14 @@
 default: &default
-  SHPA_API_URL: 'http://192.168.1.141:3001/api/'
+  SHPA_API_URL: 'http://localhost:3333/api'
+  SHPA_USERNAME: development
+  SHPA_PASSWORD: development
+
+  APP_NAME: "Insurance Reminder"
+  VERBOICE_URL: http://localhost:3030/api2
+  EMAIL: 'channa.ly@instedd.org'
+  PASSWORD: '123456'
+  CHANNEL_ID: 14
+  CALL_FLOW_ID: 11
 
 development:
   <<: *default

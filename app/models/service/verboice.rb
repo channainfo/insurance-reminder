@@ -1,7 +1,7 @@
-class Verboice
+class Service::Verboice
 
   def self.connect
-    @@instance ||= Verboice.new(ENV['EMAIL'], ENV['PASSWORD'])
+    @@instance ||= self.new(ENV['EMAIL'], ENV['PASSWORD'])
   end
 
   def initialize(email, password)
@@ -30,31 +30,41 @@ class Verboice
     options = client.to_verboice_params
     options[:address] = call.phone_number
     response = post("/call", {call: options})
-    verboice_call = JSON.parse(response.body)
+  
+    if response.success?
+      verboice_call = JSON.parse(response.body)
 
-    retry_call = client.calls.build( expiration_date: call.expiration_date,
-                               phone_number: call.phone_number,
-                               verboice_call_id: verboice_call[:call_id],
-                               family_code: call.family_code,
-                               status: Call::STATUS_PENDING,
-                               main: call)
-    retry_call.save
+      retry_call = client.calls.build( expiration_date: call.expiration_date,
+                                 phone_number: call.phone_number,
+                                 verboice_call_id: verboice_call[:call_id],
+                                 family_code: call.family_code,
+                                 status: Call::STATUS_PENDING,
+                                 main: call)
+      retry_call.save
 
-    call.status = Call::STATUS_RETRIED
-    call.save!
+      # Update main call to pending status
+      call.status = Call::STATUS_PENDING
+      call.save
+    else
+      false
+    end
   end
 
   def call client
     options = client.to_verboice_params
     response = post("/call", {call: options})
-    verboice_call = JSON.parse(response.body)
+    if(response.success?)
+      verboice_call = JSON.parse(response.body)
 
-    call = client.calls.build( expiration_date: client.expiration_date,
-                               phone_number: client.phone_number,
-                               verboice_call_id: verboice_call[:call_id],
-                               family_code: client.family_code,
-                               status: Call::STATUS_PENDING)
-    call.save
+      call = client.calls.build( expiration_date: client.expiration_date,
+                                 phone_number: client.phone_number,
+                                 verboice_call_id: verboice_call[:call_id],
+                                 family_code: client.family_code,
+                                 status: Call::STATUS_PENDING)
+      call.save
+    else
+      false
+    end
   end
 
   def call_logs params = {}

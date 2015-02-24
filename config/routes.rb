@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   resources :sessions, only: [:index, :create, :destroy]
 
   resources :call_logs, only: [:index]
-  resources :calls, only: [:index, :new] do
+  resources :calls, only: [:index, :new, :create] do
     member do
       put 'retry'
     end
@@ -22,6 +22,8 @@ Rails.application.routes.draw do
       get 'download_csv'
     end
   end
+
+  resources :shpas
 
   get 'settings' => 'settings#index'
   put 'update_settings' => 'settings#update'

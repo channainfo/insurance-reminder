@@ -45,17 +45,19 @@
     <%= link_to download_csv_calls_path(app_params), class: 'btn btn- btn-primary' do %>
       <i class='glyphicon glyphicon-download-alt'> </i> Download CSV
     <% end %>
-    <%= link_to new_call_path, class: 'btn btn- btn-primary' do %>
+    <button class='btn btn-primary' data-toggle="modal" data-target="#new-reminder">
       <i class='glyphicon glyphicon-plus'> </i> Add Reminder
-    <% end %>
+    </button>
   </div>
 </div>
+
+<%= render 'new' %>
 
 <table class='table table-strip' >
   <thead>
     <tr>
       <td>Family code</td>
-      <td>Family name</td>
+      <td>Full name</td>
       <td>Call status</td>
       <td>Retries</td>
       <td>Expiration date</td>
@@ -68,7 +70,7 @@
     <% @calls.each_with_index do |call, index| %>
       <tr>
         <td><%= call.client.family_code %></td>
-        <td><%= call.client.family_name %></td>
+        <td><%= call.client.full_name %></td>
         <td>
           <%= call.status %>
           <% if call.retryable? %>

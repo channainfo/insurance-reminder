@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150217030147) do
+ActiveRecord::Schema.define(version: 20150224041126) do
 
   create_table "calls", force: :cascade do |t|
     t.integer  "client_id",        limit: 4
@@ -38,7 +38,8 @@ ActiveRecord::Schema.define(version: 20150217030147) do
     t.datetime "updated_at",                              null: false
     t.integer  "number_retry",    limit: 4,   default: 0
     t.integer  "calls_count",     limit: 4,   default: 0
-    t.string   "family_name",     limit: 255
+    t.string   "full_name",       limit: 255
+    t.integer  "beneficiary_id",  limit: 4
   end
 
   create_table "settings", force: :cascade do |t|

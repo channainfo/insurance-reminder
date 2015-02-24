@@ -8,6 +8,6 @@ class CallLogsController < ApplicationController
   private
 
   def set_verboice_connection
-    @verboice = Verboice.connect
+    @verboice = Service::Verboice.connect
   end
 end
