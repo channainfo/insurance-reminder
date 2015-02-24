@@ -1,6 +1,6 @@
 class Client < ActiveRecord::Base
   validates :beneficiary_id, uniqueness: true
-  has_many :calls
+  has_many :calls, dependent: :destroy
 
   include VerboiceParameterize, ShpaTransform
 

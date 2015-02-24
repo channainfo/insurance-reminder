@@ -5,9 +5,10 @@ module ShpaTransform
 
   module ClassMethods
     def shpa_to_client_params(shpa_beneficiary)
+      phone_number = shpa_beneficiary['phone_number'].gsub(/\s*\-*/, '')
       {
         beneficiary_id: shpa_beneficiary['id'],
-        phone_number: shpa_beneficiary['phone_number'],
+        phone_number: phone_number,
         full_name: shpa_beneficiary['full_name'],
         expiration_date: shpa_beneficiary['contract']['expiration_date'],
         family_code: shpa_beneficiary['family']['family_code']

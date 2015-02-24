@@ -25,8 +25,7 @@ handleAddReminder = function(){
         }
         else {
           setNotification("notice", response['message'])
-          $alert.css('color', 'red')
-          window.location.href = '/call'
+          $alert.css('color', 'green')
         }
 
         $alert.show()

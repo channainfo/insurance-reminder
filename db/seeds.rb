@@ -36,7 +36,6 @@ clients = Client.all
   call = client.calls.build(expiration_date: expired_date,
                             phone_number: client.phone_number,
                             family_code: client.family_code,
-                            beneficiary_id: client.beneficiary_id,
                             status: Call::STATUS_ERROR)
   call.save!
 
@@ -45,7 +44,6 @@ clients = Client.all
     retry_call = client.calls.build(expiration_date: expired_date,
                                     phone_number: client.phone_number,
                                     family_code: client.family_code,
-                                    beneficiary_id: client.beneficiary_id,
                                     main: call,
                                     status: Call::STATUS_ERROR)
     retry_call.save!
