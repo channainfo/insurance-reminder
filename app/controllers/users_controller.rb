@@ -20,6 +20,16 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
   end
 
+  def update
+    @user = User.find(params[:id])
+
+    if @user.update_attributes(protected_basic_params)
+      redirect_to users_path, notice: 'User has been updated'
+    else
+      render :edit
+    end
+  end
+
   def destroy
     @user = User.find(params[:id])
     if @user.destroy
@@ -33,6 +43,10 @@ class UsersController < ApplicationController
 
   def protected_params
     params.require(:user).permit(:username, :password, :password_confirmation, :role, :name)
+  end
+
+  def protected_basic_params
+    params.require(:user).permit(:password, :password_confirmation, :role, :name)
   end
 
 end
