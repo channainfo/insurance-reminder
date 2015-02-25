@@ -1,0 +1,46 @@
+<%= page_title "Users" %>
+
+<h3 class='page-header'>Users</h3>
+
+<div class='clearfix' style="padding-bottom: 10px;">
+  <div class='pull-left'>
+    <%= paginate @users, theme: 'twitter-bootstrap-3' %>
+  </div>
+  <div class='pull-right' style='margin-top: 15px;'>
+    <%= link_to new_user_path, class: 'btn btn-sm btn-primary' do %>
+      <i class='glyphicon glyphicon-plus'> </i> Add User
+    <% end %>
+  </div>
+</div>
+
+<table class='table table-hover' >
+  <thead>
+    <tr>
+      <th>Login</th>
+      <th>Full name</th>
+      <th>Role</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @users.each_with_index do |user, index| %>
+      <tr>
+        <td><%= user.username %></td>
+        <td><%= user.name %></td>
+        <td><%= user.role %></td>
+        <td>
+          <% if user.user? %>
+            <%= link_to edit_user_path(user), class: 'btn btn-xs btn-primary' do %>
+              <i class='glyphicon glyphicon-pencil'> </i> edit
+            <% end %>
+            <%= link_to user_path(user), method: :delete, confirm: 'Are you sure, you want to delete', class: 'btn btn-xs btn-danger' do %>
+              <i class='glyphicon glyphicon-minus'> </i> Add User
+            <% end %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= paginate @users, theme: 'twitter-bootstrap-3' %>
