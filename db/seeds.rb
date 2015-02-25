@@ -8,7 +8,7 @@
 
 # Default user
 
-user_attrs = { username: 'admin', password: '123456', name: 'Admin' }
+user_attrs = { username: 'admin', password: '123456', name: 'Admin', role: User::ROLE_ADMIN }
 
 user = User.where(username: user_attrs[:username]).first_or_initialize
 user.update_attributes(user_attrs)
