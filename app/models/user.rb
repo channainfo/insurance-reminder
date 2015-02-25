@@ -20,6 +20,10 @@ class User < ActiveRecord::Base
     false
   end
 
+  def admin?
+    role == ROLE_ADMIN
+  end
+
   def user?
     role == ROLE_USER
   end

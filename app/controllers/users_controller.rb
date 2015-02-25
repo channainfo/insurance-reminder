@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   def index
-    @users = User.except(current_user).page(params[:page])
+    @users = User.except(current_user).order(:role).page(params[:page])
   end
 
   def new
