@@ -1,4 +1,7 @@
 class CallsController < ApplicationController
+  skip_before_action :authenticate_user!, only: [:notify_call_started, :notify_call_finished]
+  skip_before_action :verify_authenticity_token, only: [:notify_call_started, :notify_call_finished]
+
   before_action :authenticate_spa_service!, only: [:new]
 
   def index
@@ -30,6 +33,20 @@ class CallsController < ApplicationController
     else
       render json: {status: 0, message: "Phone number does not exist"}
     end
+  end
+
+  def notify_call_started
+    call = Call.find_by_verboice_call_id(params[:CallSid])
+    call.mark_as_error! if call
+
+    render text: nil
+  end
+
+  def notify_call_finished
+    call = Call.find_by_verboice_call_id(params[:CallSid])
+    call.mark_as_success! if call
+
+    render text: nil
   end
 
   private

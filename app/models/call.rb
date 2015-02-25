@@ -13,9 +13,9 @@ class Call < ActiveRecord::Base
 
   MAX_RETRY_NUMBER = 3
 
-  before_save :monitor_status
+  before_save :observe_status
 
-  def monitor_status
+  def observe_status
     if self.status == Call::STATUS_ERROR && self.calls_count > MAX_RETRY_NUMBER
       self.status = Call::STATUS_FAILED
     end

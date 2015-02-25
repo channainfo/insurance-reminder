@@ -5,21 +5,21 @@
     <variable name="service_domain" display-name="Service Domain" type="string"/>
   </global-settings>
   <steps>
-    <step name="notify_call_start"
-      display-name="Notify Call Start"
+    <step name="notify_call_started"
+      display-name="Notify Call Started"
       icon="medicalkit"
       type="callback"
-      callback-url="http://{service_domain}/steps/notify_call_failed">
+      callback-url="http://{service_domain}/calls/notify_call_started">
       <settings/>
       <response type="none"/>
     </step>
   </steps>
   <steps>
-    <step name="notify_call_end"
-      display-name="Notify Call End"
+    <step name="notify_call_finished"
+      display-name="Notify Call Finished"
       icon="medicalkit"
       type="callback"
-      callback-url="http://{service_domain}/steps/notify_call_success">
+      callback-url="http://{service_domain}/calls/notify_call_finished">
       <settings/>
       <response type="none"/>
     </step>
