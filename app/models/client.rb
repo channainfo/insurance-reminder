@@ -5,9 +5,11 @@ class Client < ActiveRecord::Base
   include VerboiceParameterize, ShpaTransform
 
   def self.import(spa_beneficiaries)
-    ActiveRecord::Base.transaction do
-      spa_beneficiaries.each do |spa_beneficiary|
-        self.create_or_update_for(spa_beneficiary)
+    if spa_beneficiaries
+      ActiveRecord::Base.transaction do
+        spa_beneficiaries.each do |spa_beneficiary|
+          self.create_or_update_for(spa_beneficiary)
+        end
       end
     end
   end
@@ -23,9 +25,9 @@ class Client < ActiveRecord::Base
     client
   end
 
-  def self.import_expired_shpa_clients_within number_of_day
-    shpa = Service::Shpa.new ENV['SHPA_USERNAME'], ENV['SHPA_PASSWORD']
-    clients = shpa.expired_within number_of_day
+  def self.import_expired_shpa_clients_before date
+    shpa = Service::Shpa.connect
+    clients = shpa.expired_on date
     import(clients)
   end
 
