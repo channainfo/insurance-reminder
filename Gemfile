@@ -39,8 +39,14 @@ gem 'whenever', :require => false
 # Use Unicorn as the app server
 # gem 'unicorn'
 
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
+group :development do
+  # Use Capistrano for deployment
+  gem 'capistrano', '~> 3.3.0'
+  gem 'capistrano-rails'
+  gem 'capistrano-passenger'
+
+  gem 'capistrano-rbenv', '~> 2.0'
+end
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -48,7 +54,6 @@ group :development, :test do
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
-  gem 'capistrano-rails'
 
   gem 'dotenv-rails'
   gem 'factory_girl_rails'
