@@ -6,6 +6,11 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
+# Default Setting
+Setting[:day_before_expiration_date] = 0
+Setting[:retries] = 0
+Setting[:call_time] = '00:00'
+
 # Default user
 
 user_attrs = { username: 'admin', password: '123456', name: 'Admin', role: User::ROLE_ADMIN }
