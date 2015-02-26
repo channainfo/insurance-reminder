@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+ruby '2.2.0'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.0'
@@ -33,6 +34,7 @@ gem 'bootstrap-kaminari-views'
 gem 'rails-timeago'
 
 gem 'rails-settings-cached'
+gem 'whenever', :require => false
 
 # Use Unicorn as the app server
 # gem 'unicorn'
