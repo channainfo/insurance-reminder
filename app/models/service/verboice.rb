@@ -10,6 +10,16 @@ class Service::Verboice
     connect
   end
 
+  def prepare_call_for(client)
+    @clients ||= []
+    @clients << client
+  end
+
+  def release_call
+    bulk_call(@clients) unless @clients.empty?
+    @clients = []
+  end
+
   def bulk_call(clients)
     options = clients.map{|client| client.to_verboice_params}
     response = post("/bulk_call", {call: options})
@@ -33,10 +43,9 @@ class Service::Verboice
   
     if response.success?
       verboice_call = JSON.parse(response.body)
-
       retry_call = client.calls.build( expiration_date: call.expiration_date,
                                  phone_number: call.phone_number,
-                                 verboice_call_id: verboice_call[:call_id],
+                                 verboice_call_id: verboice_call['call_id'],
                                  family_code: call.family_code,
                                  status: Call::STATUS_PENDING,
                                  main: call)
@@ -58,7 +67,7 @@ class Service::Verboice
 
       call = client.calls.build( expiration_date: client.expiration_date,
                                  phone_number: client.phone_number,
-                                 verboice_call_id: verboice_call[:call_id],
+                                 verboice_call_id: verboice_call['call_id'],
                                  family_code: client.family_code,
                                  status: Call::STATUS_PENDING)
       call.save

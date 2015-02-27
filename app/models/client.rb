@@ -8,7 +8,8 @@ class Client < ActiveRecord::Base
     if spa_beneficiaries
       ActiveRecord::Base.transaction do
         spa_beneficiaries.each do |spa_beneficiary|
-          self.create_or_update_for(spa_beneficiary)
+          client = self.create_or_update_for(spa_beneficiary)
+          yield(client) if block_given?
         end
       end
     end
@@ -25,10 +26,14 @@ class Client < ActiveRecord::Base
     client
   end
 
-  def self.import_expired_shpa_clients_before date
+  def self.import_expired_shpa_clients_on date
     shpa = Service::Shpa.connect
-    clients = shpa.expired_on date
-    import(clients)
+    spa_beneficiaries = shpa.expired_on(date)
+
+    import(spa_beneficiaries) do |client|
+      Verboice.connect.prepare_call_for(client)
+    end
+    Verboice.connect.release_call
   end
 
   def self.find_by_phone_number_on_local_or_remote(phone_number)

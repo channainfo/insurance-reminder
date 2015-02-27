@@ -20,10 +20,10 @@ user.update_attributes(user_attrs)
 
 
 client_attrs = [
-  {phone_number: '0975553553', family_code: '1234-984763-09810', expiration_date: '2015-11-9', full_name: 'Visal', beneficiary_id: 1},
-  {phone_number: '069860012', family_code: '1234-984763-09811', expiration_date: '2015-11-9', full_name: 'Kosal', beneficiary_id: 2},
-  {phone_number: '077777457', family_code: '1234-984763-09812', expiration_date: '2015-11-9', full_name: 'Phirum', beneficiary_id: 3},
-  {phone_number: '1000', family_code: '1234-984763-09813', expiration_date: '2015-11-9', full_name: 'Sophal', beneficiary_id: 4}
+  {phone_number: '0975553553', family_code: '1234-984763-09810', expiration_date: '2015-1-1', full_name: 'Visal', beneficiary_id: 1},
+  {phone_number: '069860012', family_code: '1234-984763-09811', expiration_date: '2015-2-2', full_name: 'Kosal', beneficiary_id: 2},
+  {phone_number: '077777457', family_code: '1234-984763-09812', expiration_date: '2015-3-3', full_name: 'Phirum', beneficiary_id: 3},
+  {phone_number: '1000', family_code: '1234-984763-09813', expiration_date: '2015-4-4', full_name: 'Sophal', beneficiary_id: 4}
 ]
 
 client_attrs.each do |attrs|
@@ -36,17 +36,15 @@ clients = Client.all
 
 (0..5).each do
   client = clients[(0..3).to_a.sample]
-  expired_date = (0..10).to_a.sample.days.ago
 
-  call = client.calls.build(expiration_date: expired_date,
+  call = client.calls.build(expiration_date: client.expiration_date,
                             phone_number: client.phone_number,
                             family_code: client.family_code,
                             status: Call::STATUS_ERROR)
   call.save!
 
   (0..Call::MAX_RETRY_NUMBER).to_a.sample.times.each.each do |index|
-    expired_date = (0..10).to_a.sample.days.ago
-    retry_call = client.calls.build(expiration_date: expired_date,
+    retry_call = client.calls.build(expiration_date: client.expiration_date,
                                     phone_number: client.phone_number,
                                     family_code: client.family_code,
                                     main: call,

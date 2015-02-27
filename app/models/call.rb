@@ -11,7 +11,7 @@ class Call < ActiveRecord::Base
   STATUS_SUCCESS = "Success"
   STATUSES = [STATUS_PENDING, STATUS_FAILED, STATUS_ERROR, STATUS_SUCCESS]
 
-  MAX_RETRY_NUMBER = 3
+  MAX_RETRY_NUMBER = 5
 
   before_save :observe_status
 
@@ -62,13 +62,21 @@ class Call < ActiveRecord::Base
   end
 
   def mark_as_error!
-    self.status = STATUS_ERROR
-    save
+    self.status = Call::STATUS_ERROR
+    save!
+    if self.main
+      main.status = Call::STATUS_ERROR
+      main.save!
+    end
   end
 
   def mark_as_success!
-    self.status = STATUS_SUCCESS
-    save
+    self.status = Call::STATUS_SUCCESS
+    save!
+    if self.main
+      main.status = Call::STATUS_SUCCESS
+      main.save!
+    end
   end
 
 end
