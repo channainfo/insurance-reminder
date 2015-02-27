@@ -11,12 +11,12 @@ class Call < ActiveRecord::Base
   STATUS_SUCCESS = "Success"
   STATUSES = [STATUS_PENDING, STATUS_FAILED, STATUS_ERROR, STATUS_SUCCESS]
 
-  MAX_RETRY_NUMBER = 5
+  MAX_DAY_PENDING = 1
 
   before_save :observe_status
 
   def observe_status
-    if self.status == Call::STATUS_ERROR && self.calls_count > MAX_RETRY_NUMBER
+    if self.status == Call::STATUS_ERROR && self.calls_count > Setting[:retries].to_i
       self.status = Call::STATUS_FAILED
     end
   end
@@ -50,7 +50,7 @@ class Call < ActiveRecord::Base
   end
 
   def retryable?
-    main? && error? && calls_count < MAX_RETRY_NUMBER
+    main? && error? && calls_count < Setting[:retries].to_i
   end
 
   def main?
@@ -67,6 +67,15 @@ class Call < ActiveRecord::Base
     if self.main
       main.status = Call::STATUS_ERROR
       main.save!
+    end
+  end
+
+  def self.mark_delay_as_error!
+    self.main_calls.each do |call|
+      if call.status == Call::STATUS_PENDING && call.updated_at <= Call::MAX_DAY_PENDING.day.ago
+        call.status = Call::STATUS_ERROR
+        call.save!
+      end
     end
   end
 

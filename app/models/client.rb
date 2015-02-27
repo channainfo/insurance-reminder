@@ -30,10 +30,11 @@ class Client < ActiveRecord::Base
     shpa = Service::Shpa.connect
     spa_beneficiaries = shpa.expired_on(date)
 
+    verboice = Service::Verboice.connect
     import(spa_beneficiaries) do |client|
-      Verboice.connect.prepare_call_for(client)
+      verboice.prepare_call_for(client) unless client.phone_number.blank?
     end
-    Verboice.connect.release_call
+    verboice.release_call
   end
 
   def self.find_by_phone_number_on_local_or_remote(phone_number)

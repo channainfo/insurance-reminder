@@ -7,8 +7,8 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 # Default Setting
-Setting[:day_before_expiration_date] = 0
-Setting[:retries] = 0
+Setting[:day_before_expiration_date] = 10
+Setting[:retries] = 3
 Setting[:call_time] = '00:00'
 
 # Default user
@@ -43,7 +43,7 @@ clients = Client.all
                             status: Call::STATUS_ERROR)
   call.save!
 
-  (0..Call::MAX_RETRY_NUMBER).to_a.sample.times.each.each do |index|
+  (0..5).to_a.sample.times.each.each do |index|
     retry_call = client.calls.build(expiration_date: client.expiration_date,
                                     phone_number: client.phone_number,
                                     family_code: client.family_code,
