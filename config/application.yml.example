@@ -1,14 +1,12 @@
 default: &default
   SHPA_API_URL: 'http://localhost:3333/api'
-  SHPA_USERNAME: development
-  SHPA_PASSWORD: development
 
   APP_NAME: "Insurance Reminder"
   VERBOICE_URL: http://localhost:3030/api2
-  EMAIL: 'channa.ly@instedd.org'
-  PASSWORD: '123456'
-  CHANNEL_ID: 14
-  CALL_FLOW_ID: 11
+  EMAIL: 'example@verboice.org'
+  PASSWORD: ''
+  CHANNEL_ID: ''
+  CALL_FLOW_ID: ''
 
 development:
   <<: *default
@@ -21,5 +19,6 @@ test:
   SHPA_PASSWORD: test
 
 production:
+  <<: *default
   SHPA_USERNAME: production
   SHPA_PASSWORD: production
