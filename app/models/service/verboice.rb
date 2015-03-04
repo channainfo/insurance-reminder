@@ -1,13 +1,18 @@
 class Service::Verboice
 
-  def self.connect
-    @@instance ||= self.new(ENV['EMAIL'], ENV['PASSWORD'])
+  def self.auth email, password
+    auth_url = "#{ENV['VERBOICE_URL']}/auth"
+    response = Typhoeus.post(auth_url, body: { account: { email: email, password: password } })
+    response.success? ? JSON.parse(response.body) : nil
   end
 
-  def initialize(email, password)
+  def self.connect
+    @@instance ||= self.new(Setting[:verboice_email], Setting[:verboice_token])
+  end
+
+  def initialize(email, token)
     @email = email
-    @password = password
-    connect
+    @token = token
   end
 
   def prepare_call_for(client)
@@ -81,16 +86,25 @@ class Service::Verboice
     get("/call_logs?#{verboice_query}")
   end
 
-  private
-
-  def connect
-    auth_url = build_url("/auth")
-    response = Typhoeus.post(auth_url, body: { account: { email: @email, password: @password } })
-    @token = JSON.parse(response.body)['auth_token']
+  def channels
+    get('/channels')
   end
 
+  def projects
+    get('/projects')
+  end
+
+  def call_flows
+    get('/call_flows')
+  end
+
+  def schedules(project_id)
+    get("/projects/#{project_id}/schedules")
+  end
+
+  private
   def get(path)
-    response = Typhoeus.get(build_url(path))
+    response = Typhoeus.get( build_url(path), body: JSON.generate(auth_params), headers: {'content-type' => 'application/json'} )
     JSON.parse(response.response_body)
   end
 
@@ -102,7 +116,7 @@ class Service::Verboice
     ENV['VERBOICE_URL'] + path
   end
 
-  def auth_params(params)
+  def auth_params(params = {})
     params.merge({ email: @email, token: @token })
   end
 end

@@ -23,6 +23,7 @@
 //= require shared/notification
 //= require shared/datepicker
 //= require shared/key_input
+//= require shared/collasable-link
 
 //= require settings/form
 //= require calls/add_reminder
