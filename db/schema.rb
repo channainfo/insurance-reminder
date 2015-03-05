@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150225022202) do
+ActiveRecord::Schema.define(version: 20150304040709) do
 
   create_table "calls", force: :cascade do |t|
     t.integer  "client_id",        limit: 4
@@ -41,6 +41,15 @@ ActiveRecord::Schema.define(version: 20150225022202) do
     t.string   "full_name",       limit: 255
     t.integer  "beneficiary_id",  limit: 4
   end
+
+  create_table "expirations", force: :cascade do |t|
+    t.date     "date"
+    t.text     "numbers",    limit: 65535
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
+  add_index "expirations", ["date"], name: "index_expirations_on_date", using: :btree
 
   create_table "settings", force: :cascade do |t|
     t.string   "var",        limit: 255,   null: false

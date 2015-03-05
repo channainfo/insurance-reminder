@@ -19,8 +19,8 @@ module Service
       ENV['SHPA_API_URL'] + "/" + path
     end
 
-    def expired_on date
-      fetch_by(expiration_date: date)
+    def expired_between from_date, to_date
+      fetch_by(from_date: from_date, to_date: to_date)
     end
   end
 end

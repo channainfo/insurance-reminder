@@ -11,12 +11,16 @@ class Service::Verboice
   end
 
   def prepare_call_for(client)
+    return if client.phone_number.blank?
+
+    Expiration.register client if client.expiration_date
+
     @clients ||= []
     @clients << client
   end
 
   def release_call
-    bulk_call(@clients) unless @clients.empty?
+    bulk_call(@clients) if @clients && !@clients.empty?
     @clients = []
   end
 

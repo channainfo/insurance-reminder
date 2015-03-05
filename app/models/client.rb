@@ -4,11 +4,11 @@ class Client < ActiveRecord::Base
 
   include VerboiceParameterize, ShpaTransform
 
-  def self.import(spa_beneficiaries)
-    if spa_beneficiaries
+  def self.import(shpa_beneficiaries)
+    if shpa_beneficiaries
       ActiveRecord::Base.transaction do
-        spa_beneficiaries.each do |spa_beneficiary|
-          client = self.create_or_update_for(spa_beneficiary)
+        shpa_beneficiaries.each do |shpa_beneficiary|
+          client = self.create_or_update_for(shpa_beneficiary)
           yield(client) if block_given?
         end
       end
@@ -19,19 +19,23 @@ class Client < ActiveRecord::Base
     where(['expiration_date = ?', date])
   end
 
-  def self.create_or_update_for(spa_beneficiary)
-    client_params = Client.shpa_to_client_params(spa_beneficiary)
+  def self.create_or_update_for(beneficiary)
+    client_params = Client.shpa_to_client_params(beneficiary)
     client = Client.where(beneficiary_id: client_params[:beneficiary_id]).first_or_initialize
     client.update_attributes(client_params)
     client
   end
 
-  def self.import_expired_shpa_clients_on date
+  def self.get_shpa_beneficiaries_expired_between from_date, to_date
     shpa = Service::Shpa.connect
-    spa_beneficiaries = shpa.expired_on(date)
+    shpa.expired_between(from_date, to_date)
+  end
+
+  def self.import_shpa_beneficiaries_expired_between from_date, to_date
+    shpa_beneficiaries = get_shpa_beneficiaries_expired_between(from_date, to_date)
 
     verboice = Service::Verboice.connect
-    import(spa_beneficiaries) do |client|
+    import(shpa_beneficiaries) do |client|
       verboice.prepare_call_for(client) unless client.phone_number.blank?
     end
     verboice.release_call
@@ -47,10 +51,10 @@ class Client < ActiveRecord::Base
 
   def self.find_by_phone_number_on_remote(phone_number)
     shpa = Service::Shpa.connect
-    spa_beneficiaries = shpa.fetch_by(phone_number: phone_number)
-    if(!spa_beneficiaries.empty?)
-      spa_beneficiary = spa_beneficiaries.first
-      self.create_or_update_for(spa_beneficiary)
+    shpa_beneficiaries = shpa.fetch_by(phone_number: phone_number)
+    if(!shpa_beneficiaries.empty?)
+      shpa_beneficiary = shpa_beneficiaries.first
+      self.create_or_update_for(shpa_beneficiary)
     else
       nil
     end
