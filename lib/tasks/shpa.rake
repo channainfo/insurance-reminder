@@ -1,6 +1,6 @@
 namespace :shpa do
   desc "Get all client who those are expired"
-  task import_expired_clients: :environment do
+  task import_beneficiaries_expired: :environment do
     from_date = Date.today
     to_date = from_date + (Setting[:day_before_expiration_date].to_i - 1).days
     Client.import_shpa_beneficiaries_expired_between from_date, to_date

@@ -7,7 +7,10 @@ set :output, "/tmp/insurance_reminder/cron_log.log"
 
 # run this task only on servers with the :app role in Capistrano
 # see Capistrano roles section below
+every :hour, :roles => [:app] do
+  rake "shpa:import_beneficiaries_expired"
+end
+
 every :day, :at => '12:01 am', :roles => [:app] do
-  rake "shpa:import_expired_clients"
   rake "shpa:update_delay_call_as_error"
 end
