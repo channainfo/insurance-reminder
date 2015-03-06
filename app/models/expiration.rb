@@ -2,24 +2,25 @@ class Expiration < ActiveRecord::Base
   validates :date, presence: true
   validates :date, uniqueness: true
 
-  serialize :numbers, Array
+  serialize :clients, Array
 
   def self.register client
-    return if client.phone_number.blank?
-    return if client.expiration_date.nil?
-
     expiration = Expiration.find_or_create_by(date: client.expiration_date)
 
-    expiration.add client.phone_number unless expiration.exist?(client.phone_number)
+    expiration.register client
   end
 
-  def add number
-    numbers.push number
+  def register client
+    add client unless exist?(client)
+  end
+
+  def add client
+    clients.push client.id
     save
   end
 
-  def exist? number
-    numbers.include?(number)
+  def exist? client
+    clients.include?(client.id)
   end
 
 end

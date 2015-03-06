@@ -11,9 +11,22 @@ class CallsController < ApplicationController
 
   def retry
     call = Call.find(params[:id])
-    verboice = Service::Verboice.connect
-    verboice.retry_call(call)
-    redirect_to calls_path(), notice: "Call have been retried"
+
+    retry_call = Call.new(
+      expiration_date: call.expiration_date,
+      phone_number: call.phone_number,
+      family_code: call.family_code,
+      status: Call::STATUS_ERROR,
+      client_id: call.try(:client).try(:id),
+      main: call)
+    retry_call.save
+
+    begin
+      Service::Verboice.connect.retry_call(retry_call)
+      redirect_to calls_path(), notice: "Call has been retried"
+    rescue
+      redirect_to calls_path(), alert: "Could not connect to Verboice"
+    end
   end
 
   def download_csv
@@ -24,8 +37,9 @@ class CallsController < ApplicationController
   def create
     client = Client.find_by_phone_number_on_local_or_remote(params[:phone_number])
     if(client)
+      call = Call.new_from(client)
       begin
-        verboice = Service::Verboice.connect.call(client)
+        Service::Verboice.connect.enqueue(call)
         render json: {status: 1, message: "Reminder has been created"}
       rescue
         render json: {status: 0, message: "Could not connect to verboice"}

@@ -10,73 +10,44 @@ class Service::Verboice
     connect
   end
 
-  def prepare_call_for(client)
-    return if client.phone_number.blank?
+  def self.bulk_call(queued_calls)
+    return if queued_calls.empty?
 
-    Expiration.register client if client.expiration_date
-
-    @clients ||= []
-    @clients << client
+    verboice = Service::Verboice.connect
+    verboice.bulk_call(queued_calls)
   end
 
-  def release_call
-    bulk_call(@clients) if @clients && !@clients.empty?
-    @clients = []
-  end
-
-  def bulk_call(clients)
-    options = clients.map{|client| client.to_verboice_params}
+  def bulk_call(queued_calls)
+    options = queued_calls.map { |call| call.to_verboice_params }
     response = post("/bulk_call", {call: options})
     call_response = JSON.parse(response.body)
     call_response.each_with_index do |call_attrs, index|
-      client = clients[index]
-      call = client.calls.build( expiration_date: client.expiration_date,
-                                 phone_number: client.phone_number,
-                                 verboice_call_id: call_attrs[:call_id],
-                                 family_code: client.family_code,
-                                 status: Call::STATUS_PENDING)
+      call = queued_calls[index]
+      call.status = Call::STATUS_PENDING
+      call.verboice_call_id = call_attrs['call_id']
       call.save!
     end
   end
 
-  def retry_call(call)
-    client = call.client
-    options = client.to_verboice_params
-    options[:address] = call.phone_number
-    response = post("/call", {call: options})
-  
-    if response.success?
-      verboice_call = JSON.parse(response.body)
-      retry_call = client.calls.build( expiration_date: call.expiration_date,
-                                 phone_number: call.phone_number,
-                                 verboice_call_id: verboice_call['call_id'],
-                                 family_code: call.family_code,
-                                 status: Call::STATUS_PENDING,
-                                 main: call)
-      retry_call.save
-
-      # Update main call to pending status
-      call.status = Call::STATUS_PENDING
-      call.save
-    else
-      false
+  def retry_call call
+    if enqueue call
+      return if call.main.nil?
+        
+      main_call = call.main
+      main_call.status = Call::STATUS_PENDING
+      main_call.save
     end
   end
 
-  def call client
-    options = client.to_verboice_params
+  def enqueue call
+    options = call.to_verboice_params
     response = post("/call", {call: options})
     if(response.success?)
       verboice_call = JSON.parse(response.body)
 
-      call = client.calls.build( expiration_date: client.expiration_date,
-                                 phone_number: client.phone_number,
-                                 verboice_call_id: verboice_call['call_id'],
-                                 family_code: client.family_code,
-                                 status: Call::STATUS_PENDING)
+      call.status = Call::STATUS_PENDING
+      call.verboice_call_id = verboice_call['call_id']
       call.save
-    else
-      false
     end
   end
 

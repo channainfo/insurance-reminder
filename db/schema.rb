@@ -44,7 +44,7 @@ ActiveRecord::Schema.define(version: 20150304040709) do
 
   create_table "expirations", force: :cascade do |t|
     t.date     "date"
-    t.text     "numbers",    limit: 65535
+    t.text     "clients",    limit: 65535
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
   end

@@ -2,7 +2,7 @@ class Client < ActiveRecord::Base
   validates :beneficiary_id, uniqueness: true
   has_many :calls, dependent: :destroy
 
-  include VerboiceParameterize, ShpaTransform
+  include ShpaTransform
 
   def self.import(shpa_beneficiaries)
     if shpa_beneficiaries
@@ -32,13 +32,20 @@ class Client < ActiveRecord::Base
   end
 
   def self.import_shpa_beneficiaries_expired_between from_date, to_date
+    queued_calls = []
+
     shpa_beneficiaries = get_shpa_beneficiaries_expired_between(from_date, to_date)
 
-    verboice = Service::Verboice.connect
     import(shpa_beneficiaries) do |client|
-      verboice.prepare_call_for(client) unless client.phone_number.blank?
+      next if client.phone_number.blank? or client.expiration_date.nil?
+
+      if Expiration.register client
+        call = Call.new_from(client)
+        queued_calls << call
+      end
     end
-    verboice.release_call
+
+    Service::Verboice.bulk_call(queued_calls) unless queued_calls.empty?
   end
 
   def self.find_by_phone_number_on_local_or_remote(phone_number)
