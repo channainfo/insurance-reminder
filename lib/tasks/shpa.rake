@@ -7,6 +7,6 @@ namespace :shpa do
   end
 
   task update_delay_call_as_error: :environment do
-    Call.mark_delay_as_error!
+    Call.mark_delay_as_error_before! 1.hours.ago
   end
 end

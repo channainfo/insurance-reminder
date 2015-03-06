@@ -13,8 +13,6 @@ class Call < ActiveRecord::Base
   STATUS_SUCCESS = "Success"
   STATUSES = [STATUS_PENDING, STATUS_FAILED, STATUS_ERROR, STATUS_SUCCESS]
 
-  MAX_DAY_PENDING = 1
-
   before_save :observe_status
 
   class << self
@@ -57,9 +55,9 @@ class Call < ActiveRecord::Base
       where('main_id is NULL')
     end
 
-    def mark_delay_as_error!
+    def mark_delay_as_error_before! datetime
       self.main_calls.each do |call|
-        if call.status == Call::STATUS_PENDING && call.updated_at <= Call::MAX_DAY_PENDING.day.ago
+        if call.status == Call::STATUS_PENDING && call.updated_at <= datetime
           call.status = Call::STATUS_ERROR
           call.save!
         end
