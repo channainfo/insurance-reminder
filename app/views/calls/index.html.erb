@@ -77,7 +77,10 @@
             <%= link_to 'Recall', retry_call_path(call), method: 'PUT', class: 'btn btn-sm btn-primary' %>
           <% end %>
         </td>
-        <td><%= call.calls_count %></td>
+        <td>
+          <%= render 'retries', call: call %>
+          <%= link_to call.calls_count, "#retries-call-#{call.id}", 'data-toggle': "modal" %>
+        </td>
         <td><%= call.expiration_date %></td>
         <td><%= call.phone_number %></td>
         <td><%= call.created_at.to_date %></td>

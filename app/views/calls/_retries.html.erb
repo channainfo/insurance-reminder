@@ -1,0 +1,26 @@
+<div class="modal fade" id='<%= "retries-call-#{call.id}" %>' tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">Retries</h4>
+      </div>
+
+      <div class="modal-body">
+        <table class='table table-strip'>
+          <tbody>
+            <% call.retries.each_with_index do |retry_call, index| %>
+              <tr>
+                <td><%= index + 1 %></td>
+                <td><%= retry_call.status %></td>
+                <td><%= retry_call.created_at %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
