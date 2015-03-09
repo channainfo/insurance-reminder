@@ -13,7 +13,7 @@ class Call < ActiveRecord::Base
   STATUS_SUCCESS = "Success"
   STATUSES = [STATUS_PENDING, STATUS_FAILED, STATUS_ERROR, STATUS_SUCCESS]
 
-  before_save :observe_status
+  after_save :observe_main_status
 
   class << self
     def new_from(client)
@@ -56,8 +56,8 @@ class Call < ActiveRecord::Base
     end
 
     def mark_delay_as_error_before! datetime
-      self.main_calls.each do |call|
-        if call.status == Call::STATUS_PENDING && call.updated_at <= datetime
+      main_calls.each do |call|
+        if call.pending? && call.past_of?(datetime)
           call.status = Call::STATUS_ERROR
           call.save!
         end
@@ -65,14 +65,17 @@ class Call < ActiveRecord::Base
     end
   end
 
-  def observe_status
-    if self.status == Call::STATUS_ERROR && self.calls_count > Setting[:retries].to_i
-      self.status = Call::STATUS_FAILED
+  def observe_main_status
+    return if main.nil?
+
+    if main.error? && main.reaches_max_retries?
+      main.status = Call::STATUS_FAILED
+      main.save!
     end
   end
 
   def retryable?
-    main? && error? && calls_count < Setting[:retries].to_i
+    main? && (error? or failed?)
   end
 
   def main?
@@ -83,19 +86,35 @@ class Call < ActiveRecord::Base
     status == Call::STATUS_ERROR
   end
 
+  def failed?
+    status == Call::STATUS_FAILED
+  end
+
+  def pending?
+    status == Call::STATUS_PENDING
+  end
+
+  def reaches_max_retries?
+    (calls_count + 1) >= Setting[:retries].to_i # late 1 when sub call was retried in counter_cached
+  end
+
+  def past_of?(datetime)
+    updated_at <= datetime
+  end
+
   def mark_as_error!
-    self.status = Call::STATUS_ERROR
+    status = Call::STATUS_ERROR
     save!
-    if self.main
+    if main
       main.status = Call::STATUS_ERROR
       main.save!
     end
   end
 
   def mark_as_success!
-    self.status = Call::STATUS_SUCCESS
+    status = Call::STATUS_SUCCESS
     save!
-    if self.main
+    if main
       main.status = Call::STATUS_SUCCESS
       main.save!
     end

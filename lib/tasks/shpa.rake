@@ -6,6 +6,7 @@ namespace :shpa do
     Client.import_shpa_beneficiaries_expired_between from_date, to_date
   end
 
+  desc "Update pending call as error"
   task update_delay_call_as_error: :environment do
     Call.mark_delay_as_error_before! 1.hours.ago
   end

@@ -74,7 +74,7 @@
         <td>
           <%= call.status %>
           <% if call.retryable? %>
-            <%= link_to 'Retry', retry_call_path(call), method: 'PUT', class: 'btn btn-sm btn-primary' %>
+            <%= link_to 'Recall', retry_call_path(call), method: 'PUT', class: 'btn btn-sm btn-primary' %>
           <% end %>
         </td>
         <td><%= call.calls_count %></td>
