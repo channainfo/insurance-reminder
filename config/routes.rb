@@ -24,8 +24,6 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :shpas
-
   get 'settings' => 'settings#index'
   put 'update_settings' => 'settings#update'
 
