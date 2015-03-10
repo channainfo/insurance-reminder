@@ -2,8 +2,12 @@ require 'csv'
 class Call < ActiveRecord::Base
   include VerboiceParameterize
 
-  validates :kind, presence: true
+<<<<<<< HEAD
   has_many :recalls, class_name: "Call", foreign_key: 'main_id'
+=======
+  validates :kind, presence: true
+  has_many :retries, class_name: "Call", foreign_key: 'main_id'
+>>>>>>> add new reminder to remind client by manual(fixes #48)
   belongs_to :main, class_name: "Call", counter_cache: true
   belongs_to :client, counter_cache: true
 

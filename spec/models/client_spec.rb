@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe Client, :type => :model do
+  it { should validate_presence_of(:phone_number) }
+  it { should validate_presence_of(:kind) }
+  it { should validate_uniqueness_of(:beneficiary_id) }
+
   describe '.will_expire_on' do
     it 'return clients that expired date match the date' do
       expiration_date = Date.new(2050,11 , 9)

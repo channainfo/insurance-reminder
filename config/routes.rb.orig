@@ -24,10 +24,17 @@ Rails.application.routes.draw do
     end
   end
 
-  get 'calls/:phone_number' => 'calls#show'
-
+<<<<<<< HEAD
   resources :settings, only: [:index]
   put 'update_settings' => 'settings#update_settings'
+=======
+  get 'calls/:phone_number' => 'calls#show'
+
+  resources :shpas
+
+  get 'settings' => 'settings#index'
+  put 'update_settings' => 'settings#update'
+>>>>>>> add new reminder to remind client by manual(fixes #48)
 
   put 'verboice' => 'settings#verboice'
   get 'schedules' => 'settings#schedules'

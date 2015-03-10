@@ -23,8 +23,11 @@
 //= require shared/notification
 //= require shared/datepicker
 //= require shared/key_input
+<<<<<<< HEAD
 //= require shared/collasable-link
+=======
 //= require shared/date
+>>>>>>> add new reminder to remind client by manual(fixes #48)
 
 //= require settings/form
 //= require calls/add_reminder

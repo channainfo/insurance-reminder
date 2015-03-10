@@ -15,11 +15,12 @@
 .w65 {
   width: 65px !important;
 }
-
+<<<<<<< HEAD
 .s-width {
   width: 12em !important;
-}
+=======
 
 .error {
   color: red;
+>>>>>>> add new reminder to remind client by manual(fixes #48)
 }

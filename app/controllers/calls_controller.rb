@@ -9,6 +9,26 @@ class CallsController < ApplicationController
     @calls = @calls.search(params).page(params[:page])
   end
 
+  def create
+    client = Client.new protected_params
+    if client.save
+      call = Call.new_from(client)
+      begin
+        Service::Verboice.connect.enqueue(call)
+        render json: {status: 1, message: "Reminder has been created"}
+      rescue
+        render json: {status: 0, message: "Could not connect to verboice"}
+      end
+    else
+      render json: {status: 0, message: "Phone number does not exist"}
+    end
+  end
+
+  def show
+    call = Call.search(params).order("created_at DESC").first
+    render json: call
+  end
+
   def retry
     call = Call.find(params[:id])
 
@@ -34,21 +54,6 @@ class CallsController < ApplicationController
     send_file Call.csv_file, :type => 'text/csv'
   end
 
-  def create
-    client = Client.find_by_phone_number_on_local_or_remote(params[:phone_number])
-    if(client)
-      call = Call.new_from(client)
-      begin
-        Service::Verboice.connect.enqueue(call)
-        render json: {status: 1, message: "Reminder has been created"}
-      rescue
-        render json: {status: 0, message: "Could not connect to verboice"}
-      end
-    else
-      render json: {status: 0, message: "Phone number does not exist"}
-    end
-  end
-
   def notify_call_started
     call = Call.find_by_verboice_call_id(params[:CallSid])
     call.mark_as_error! if call
@@ -64,6 +69,10 @@ class CallsController < ApplicationController
   end
 
   private
+
+  def protected_params
+    params.require(:client).permit(:phone_number, :family_code, :full_name, :expiration_date, :kind)
+  end
 
   def authenticate_spa_service!
     authenticate_or_request_with_http_basic do |username, password|

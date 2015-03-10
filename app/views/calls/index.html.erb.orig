@@ -62,8 +62,11 @@
       <td>Expiration date</td>
       <td>Phone number</td>
       <td width="120">Reminder date</td>
-      <td>Type</td>
+<<<<<<< HEAD
       <td> Action </td>
+=======
+      <td>Type</td>
+>>>>>>> add new reminder to remind client by manual(fixes #48)
     </tr>
   </thead>
 
@@ -83,12 +86,15 @@
         <td><%= call.expiration_date %></td>
         <td><%= call.phone_number %></td>
         <td><%= call.created_at.to_date %></td>
-        <td><%= call.kind_text %></td>
+<<<<<<< HEAD
         <td>
           <% if call.retryable? %>
             <%= link_to 'Recall', retry_call_path(call), method: 'PUT', class: 'btn btn-sm btn-primary' %>
           <% end %>
         </td>
+=======
+        <td><%= call.kind_text %></td>
+>>>>>>> add new reminder to remind client by manual(fixes #48)
       </tr>
     <% end %>
   </tbody>

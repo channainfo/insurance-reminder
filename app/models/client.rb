@@ -1,8 +1,13 @@
 class Client < ActiveRecord::Base
-  validates :beneficiary_id, uniqueness: true
+  validates :phone_number, presence: true
+  validates :kind, presence: true
+  validates :beneficiary_id, uniqueness: true, if: :beneficiary_id
   has_many :calls, dependent: :destroy
 
   include ShpaTransform
+
+  KIND_AUTO = 1
+  KIND_MANUAL = 2
 
   def self.import(shpa_beneficiaries)
     if shpa_beneficiaries
@@ -48,23 +53,8 @@ class Client < ActiveRecord::Base
     Service::Verboice.bulk_call(queued_calls) unless queued_calls.empty?
   end
 
-  def self.find_by_phone_number_on_local_or_remote(phone_number)
-     Client.find_by_phone_number_on_local(phone_number) || Client.find_by_phone_number_on_remote(phone_number)
-  end
-
-  def self.find_by_phone_number_on_local(phone_number)
-    Client.find_by(phone_number: phone_number)
-  end
-
-  def self.find_by_phone_number_on_remote(phone_number)
-    shpa = Service::Shpa.connect
-    shpa_beneficiaries = shpa.fetch_by(phone_number: phone_number)
-    if(!shpa_beneficiaries.empty?)
-      shpa_beneficiary = shpa_beneficiaries.first
-      self.create_or_update_for(shpa_beneficiary)
-    else
-      nil
-    end
+  def kind_text
+    kind == KIND_AUTO ? 'Auto' : 'Manual'
   end
 
 end
