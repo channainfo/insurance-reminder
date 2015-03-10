@@ -47,7 +47,8 @@ class Call < ActiveRecord::Base
       CSV.open(csv_file, 'wb') do |csv|
         csv << ['Family code', 'Full name', 'Call status', 'Recalls', 'Expiration date', 'Phone number', 'Reminder date']
         find_each do |call|
-          csv << [ call.client.family_code, call.client.full_name, call.status, call.calls_count,
+          recalls = call.calls_count > 0 ? call.calls_count : ''
+          csv << [ call.client.family_code, call.client.full_name, call.status, recalls,
                    call.expiration_date, call.phone_number, call.created_at.to_date]
         end
       end
