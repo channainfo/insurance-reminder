@@ -29,6 +29,8 @@ Rails.application.routes.draw do
   get 'settings' => 'settings#index'
   put 'update_settings' => 'settings#update'
 
+  put 'verboice' => 'settings#verboice'
+  get 'schedules' => 'settings#schedules'
   get '/steps/manifest' => 'steps#manifest', defaults: { format: :xml }
 
 end

@@ -1,0 +1,26 @@
+<%= form_tag(update_settings_path, method: :put, class: 'form') do %>
+  <div class="form-group clearfix">
+    <%= label_tag 'day_before_expiration_date', 'Call', class: 'col-sm-2' %>
+    <%= text_field_tag 'day_before_expiration_date', @settings[:day_before_expiration_date], class: 'w65 form-control col-sm-2 numeric', size: 2, maxlength: 2 %>
+    <span class='col-sm-4'>day before expiration date</span>
+  </div>
+  <div class='clearfix'> </div>
+
+  <div class="form-group clearfix">
+    <%= label_tag 'retries', 'After', class: 'col-sm-2' %>
+    <%= text_field_tag 'retries', @settings[:retries], class: 'w65 form-control col-sm-2 numeric', size: 2, maxlength: 2 %>
+    <span class='col-sm-4'>retries, it will mark as Failed</span>
+  </div>
+  <div class='clearfix'> </div>
+
+  <div class="form-group clearfix">
+    <%= label_tag 'call_time', 'Call time', class: 'col-sm-2' %>
+    <%= text_field_tag 'call_time', @settings[:call_time], class: 'w65 form-control col-sm-2 time', size: 5, maxlength: 5 %>
+  </div>
+  <div class='clearfix'> </div>
+
+  <div class="form-group clearfix">
+    <label> </label>
+    <%= submit_tag 'Save', class: "btn btn-primary" %>
+  </div>
+<% end %>

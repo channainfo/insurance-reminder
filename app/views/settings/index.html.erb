@@ -1,27 +1,37 @@
 <h3>Settings</h3>
 
-<%= form_tag(update_settings_path, method: :put, class: 'form') do %>
-  <div class="form-group clearfix">
-    <%= label_tag 'day_before_expiration_date', 'Call', class: 'col-sm-2' %>
-    <%= text_field_tag 'day_before_expiration_date', @settings[:day_before_expiration_date], class: 'w65 form-control col-sm-2 numeric', size: 2, maxlength: 2 %>
-    <span class='col-sm-4'>day before expiration date</span>
-  </div>
-  <div class='clearfix'> </div>
+<ul class="nav nav-tabs">
+  <li class="<%= tab_active_for(:default) %>">
+     <%= link_to 'Parameters', settings_path %>
+  </li>
 
-  <div class="form-group clearfix">
-    <%= label_tag 'retries', 'After', class: 'col-sm-2' %>
-    <%= text_field_tag 'retries', @settings[:retries], class: 'w65 form-control col-sm-2 numeric', size: 2, maxlength: 2 %>
-    <span class='col-sm-4'>retries, it will mark as Failed</span>
-  </div>
-  <div class='clearfix'> </div>
+  <li class="<%= tab_active_for(:verboice) %>">
+     <%= link_to 'Verboice', settings_path(tab: :verboice ) %>
+  </li>
+</ul>
 
-  <div class="form-group clearfix">
-    <%= label_tag 'call_time', 'Call time', class: 'col-sm-2' %>
-    <%= text_field_tag 'call_time', @settings[:call_time], class: 'w65 form-control col-sm-2 time', size: 5, maxlength: 5 %>
-  </div>
-  <div class='clearfix'> </div>
+<div style='padding: 15px 0px;'>
+  
+  <% if tab_active_for(:default) == 'active' %>
+    <%= render 'settings' %>
+  <% else %>
+    <div>
+      <% if Setting[:verboice_token].blank? %>
+        <%= render 'connection' %>
+      <% else %>
+        <a href='#' class='collasable-link'>
+          <i class='glyphicon glyphicon-cog'> </i> Verboice Connection
+        </a>
+        <div class='collasable-container' style='display:none;'>
+          <%= render 'connection' %>
+          <hr />
+        </div>
 
-  <div class="form-group clearfix">
-    <%= submit_tag 'Save', class: "btn btn-primary" %>
-  </div>
-<% end %>
+        <div style='margin-top: 30px;'>
+          <p> <%= render 'verboice' %> </p>
+        </div>
+      <% end %>
+
+    </div>
+  <% end %>
+</div>
