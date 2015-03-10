@@ -8,7 +8,7 @@
 
 # Default Setting
 Setting[:day_before_expiration_date] = 7
-Setting[:retries] = 3
+Setting[:recalls] = 3
 Setting[:call_time] = '11:30'
 
 # Default user

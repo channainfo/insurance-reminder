@@ -15,13 +15,6 @@ class Service::Verboice
     @token = token
   end
 
-  def self.bulk_call(queued_calls)
-    return if queued_calls.empty?
-
-    verboice = Service::Verboice.connect
-    verboice.bulk_call(queued_calls)
-  end
-
   def bulk_call(queued_calls)
     options = queued_calls.map { |call| call.to_verboice_params }
     response = post("/bulk_call", {call: options})

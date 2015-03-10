@@ -2,7 +2,7 @@ require 'csv'
 class Call < ActiveRecord::Base
   include VerboiceParameterize
 
-  has_many :retries, class_name: "Call", foreign_key: 'main_id'
+  has_many :recalls, class_name: "Call", foreign_key: 'main_id'
   belongs_to :main, class_name: "Call", counter_cache: true
   belongs_to :client, counter_cache: true
 
@@ -39,7 +39,7 @@ class Call < ActiveRecord::Base
 
     def to_csv
       CSV.open(csv_file, 'wb') do |csv|
-        csv << ['Family code', 'Full name', 'Call status', 'Retries', 'Expiration date', 'Phone number', 'Reminder date']
+        csv << ['Family code', 'Full name', 'Call status', 'Recalls', 'Expiration date', 'Phone number', 'Reminder date']
         find_each do |call|
           csv << [ call.client.family_code, call.client.full_name, call.status, call.calls_count,
                    call.expiration_date, call.phone_number, call.created_at.to_date]
@@ -68,14 +68,14 @@ class Call < ActiveRecord::Base
   def observe_main_status
     return if main.nil?
 
-    if main.error? && main.reaches_max_retries?
+    if main.error? && main.reaches_max_recalls?
       main.status = Call::STATUS_FAILED
       main.save!
     end
   end
 
   def retryable?
-    main? && (error? or failed?)
+    main? && !pending?
   end
 
   def main?
@@ -94,8 +94,8 @@ class Call < ActiveRecord::Base
     status == Call::STATUS_PENDING
   end
 
-  def reaches_max_retries?
-    (calls_count + 1) >= Setting[:retries].to_i # late 1 when sub call was retried in counter_cached
+  def reaches_max_recalls?
+    (calls_count + 1) >= Setting[:recalls].to_i # late 1 when sub call was retried in counter_cached
   end
 
   def past_of?(datetime)

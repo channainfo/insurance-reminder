@@ -59,10 +59,11 @@
       <td>Family code</td>
       <td>Full name</td>
       <td>Call status</td>
-      <td>Retries</td>
+      <td>Recalls</td>
       <td>Expiration date</td>
       <td>Phone number</td>
       <td width="120">Reminder date</td>
+      <td> Action </td>
     </tr>
   </thead>
 
@@ -71,19 +72,22 @@
       <tr>
         <td><%= call.client.family_code %></td>
         <td><%= call.client.full_name %></td>
+        <td><%= call.status %></td>
         <td>
-          <%= call.status %>
-          <% if call.retryable? %>
-            <%= link_to 'Recall', retry_call_path(call), method: 'PUT', class: 'btn btn-sm btn-primary' %>
+          <% if call.calls_count > 0 %>
+            <%= render 'retries', call: call %>
+            <%= link_to call.calls_count, "#retries-call-#{call.id}", 'data-toggle': "modal", class: 'badge' %>
+          <% else %>
           <% end %>
-        </td>
-        <td>
-          <%= render 'retries', call: call %>
-          <%= link_to call.calls_count, "#retries-call-#{call.id}", 'data-toggle': "modal" %>
         </td>
         <td><%= call.expiration_date %></td>
         <td><%= call.phone_number %></td>
         <td><%= call.created_at.to_date %></td>
+        <td>
+          <% if call.retryable? %>
+            <%= link_to 'Recall', retry_call_path(call), method: 'PUT', class: 'btn btn-sm btn-primary' %>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>

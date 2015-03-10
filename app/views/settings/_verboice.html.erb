@@ -66,12 +66,16 @@
 
   <div class='input-row'>
     <%= label_tag :project %>
-    <%= select_tag :project, options_for_select(project_options, Setting[:project]), class: 'form-control s-width' %>
+    <%= select_tag :project, options_for_select(project_options, Setting[:project]),
+                   include_blank: 'Select a project',
+                   class: 'form-control s-width' %>
   </div>
 
   <div class='input-row'>
     <%= label_tag :call_flow %>
-    <%= select_tag :call_flow, options_for_select(call_flow_options, Setting[:call_flow]), class: 'form-control s-width' %>
+    <%= select_tag :call_flow, options_for_select(call_flow_options, Setting[:call_flow]),
+                   include_blank: 'Select a call flow',
+                   class: 'form-control s-width' %>
   </div>
 
   <div class='input-row'>

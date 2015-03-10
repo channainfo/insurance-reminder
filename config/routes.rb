@@ -24,8 +24,8 @@ Rails.application.routes.draw do
     end
   end
 
-  get 'settings' => 'settings#index'
-  put 'update_settings' => 'settings#update'
+  resources :settings, only: [:index]
+  put 'update_settings' => 'settings#update_settings'
 
   put 'verboice' => 'settings#verboice'
   get 'schedules' => 'settings#schedules'

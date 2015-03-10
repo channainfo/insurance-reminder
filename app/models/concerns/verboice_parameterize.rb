@@ -1,9 +1,11 @@
 module VerboiceParameterize
   def to_verboice_params
     {
-      channel_id: ENV['CHANNEL_ID'],
-      call_flow_id: ENV['CALL_FLOW_ID'],
+      channel_id: Setting[:channel],
+      call_flow_id: Setting[:call_flow],
+      schedule_id: Setting[:schedule],
       address: self.phone_number,
+
       vars: {
         year: self.expiration_date.year,
         month: self.expiration_date.month,

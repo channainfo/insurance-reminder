@@ -5,12 +5,19 @@ class SettingsController < ApplicationController
     @parameters = verboice_parameters
   end
 
-  def update
-    [:day_before_expiration_date, :retries, :call_time, :project, :channel, :call_flow, :schedule].each do |key|
-      Setting[key] = params[key]
+  def update_settings
+    settings = []
+    if params[:tab].present? && params[:tab] == "verboice"
+      settings = [:project, :channel, :call_flow, :schedule]
+    else
+      settings = [:day_before_expiration_date, :recalls]
     end
 
+    settings.each do |key|
+      Setting[key] = params[key]
+    end
     redirect_to settings_path(tab: params[:tab]), notice: 'Setting has been saved'
+
   end
 
   def verboice
@@ -40,11 +47,12 @@ class SettingsController < ApplicationController
       result[:channels]   = Service::Verboice.connect().channels
       result[:projects]   = Service::Verboice.connect().projects
       result[:call_flows] = Service::Verboice.connect().call_flows
-      result[:schedules]  = get_schedules(Setting[:project]) unless Setting[:project].empty?
+      result[:schedules]  = get_schedules(Setting[:project]) unless Setting[:project].blank?
     rescue JSON::ParserError
       flash.now.alert = " Failed to fetch some data from verboice"
     end
 
     result
   end
+
 end
