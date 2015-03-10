@@ -15,6 +15,7 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav navbar-right">
         <li><%= link_to 'Reminders', calls_url %></li>
+        <li><%= link_to 'OD', operational_districts_url %></li>
         <li><%= link_to 'Setting', settings_url %></li>
         <% if current_user.admin? %>
           <li><%= link_to 'Users', users_url %></li>

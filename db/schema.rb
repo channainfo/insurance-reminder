@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150309093426) do
+ActiveRecord::Schema.define(version: 20150310082950) do
 
   create_table "calls", force: :cascade do |t|
     t.integer  "client_id",        limit: 4
@@ -52,6 +52,15 @@ ActiveRecord::Schema.define(version: 20150309093426) do
   end
 
   add_index "expirations", ["date"], name: "index_expirations_on_date", using: :btree
+
+  create_table "operational_districts", force: :cascade do |t|
+    t.string   "name",            limit: 255
+    t.string   "code",            limit: 255
+    t.integer  "external_id",     limit: 4
+    t.boolean  "enable_reminder", limit: 1
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+  end
 
   create_table "settings", force: :cascade do |t|
     t.string   "var",        limit: 255,   null: false

@@ -1,0 +1,49 @@
+<%= page_title "Operational District" %>
+
+<h3 class='page-header'>Operational District</h3>
+
+<div class='clearfix' style="padding-bottom: 10px;">
+  <div class='pull-left'>
+    <%= paginate @operational_districts, theme: 'twitter-bootstrap-3' %>
+  </div>
+  <div class='pull-right' style='margin-top: 15px;'>
+    <%= link_to 'New Operational district', new_operational_district_path, class: 'btn btn-primary' %>
+  </div>
+</div>
+
+<table class='table table-strip table-hover'>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Name</th>
+      <th>Code</th>
+      <th>External</th>
+      <th>Reminder enabled</th>
+      <td>Action</td>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% if @operational_districts.empty? %>
+      <tr class='error'>
+        <td colspan='6'>No record</td>
+      </tr>
+    <% end %>
+
+    <% @operational_districts.each_with_index do |operational_district, index| %>
+      <tr>
+        <td><%= index + 1 %></td>
+        <td><%= operational_district.code %></td>
+        <td><%= operational_district.name %></td>
+        <td><%= operational_district.external_id %></td>
+        <td><%= check_box_tag '', '',  operational_district.enable_reminder, disabled: true %></td>
+        <td>
+          <%= link_to 'Edit', edit_operational_district_path(operational_district), class: 'btn btn-sm btn-primary' %>
+          <%= link_to 'Remove', operational_district_path(operational_district), method: :delete, data: {confirm: 'Are you sure you want to delete?'}, class: 'btn btn-sm btn-primary' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= paginate @operational_districts, theme: 'twitter-bootstrap-3' %>
