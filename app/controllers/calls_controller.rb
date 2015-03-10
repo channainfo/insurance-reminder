@@ -38,6 +38,7 @@ class CallsController < ApplicationController
       family_code: call.family_code,
       status: Call::STATUS_ERROR,
       client_id: call.try(:client).try(:id),
+      kind: Call::KIND_MANUAL,
       main: call)
     retry_call.save
 
