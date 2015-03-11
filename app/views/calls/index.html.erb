@@ -70,8 +70,8 @@
   <tbody>
     <% @calls.each_with_index do |call, index| %>
       <tr>
-        <td><%= call.client.family_code %></td>
-        <td><%= call.client.full_name %></td>
+        <td><%= call.family_code %></td>
+        <td><%= call.full_name %></td>
         <td><%= call.status %></td>
         <td>
           <% if call.calls_count > 0 %>
