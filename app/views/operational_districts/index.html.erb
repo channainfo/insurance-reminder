@@ -7,7 +7,9 @@
     <%= paginate @operational_districts, theme: 'twitter-bootstrap-3' %>
   </div>
   <div class='pull-right' style='margin-top: 15px;'>
-    <%= link_to 'New Operational district', new_operational_district_path, class: 'btn btn-primary' %>
+    <%= link_to new_operational_district_path, class: 'btn btn-primary' do %>
+      <i class='glyphicon glyphicon-plus'> </i> New OD
+    <% end %>
   </div>
 </div>
 
@@ -19,7 +21,7 @@
       <th>Code</th>
       <th>External</th>
       <th>Reminder enabled</th>
-      <td>Action</td>
+      <th width="160">Action</th>
     </tr>
   </thead>
 
@@ -38,8 +40,12 @@
         <td><%= operational_district.external_id %></td>
         <td><%= check_box_tag '', '',  operational_district.enable_reminder, disabled: true %></td>
         <td>
-          <%= link_to 'Edit', edit_operational_district_path(operational_district), class: 'btn btn-sm btn-primary' %>
-          <%= link_to 'Remove', operational_district_path(operational_district), method: :delete, data: {confirm: 'Are you sure you want to delete?'}, class: 'btn btn-sm btn-primary' %>
+          <%= link_to edit_operational_district_path(operational_district), class: 'btn btn-sm btn-primary' do %>
+            <i class='glyphicon glyphicon-pencil'> </i> Edit
+          <% end %>
+          <%= link_to operational_district_path(operational_district), method: :delete, data: {confirm: 'Are you sure you want to delete?'}, class: 'btn btn-sm btn-primary' do %>
+            <i class='glyphicon glyphicon-trash'> </i> Remove
+          <% end %>
         </td>
       </tr>
     <% end %>

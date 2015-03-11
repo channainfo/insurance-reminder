@@ -11,4 +11,8 @@ class OperationalDistrict < ActiveRecord::Base
     ods = ods.where(['enable_reminder = ?', options[:enable_reminder]]) if options[:enable_reminder].present?
     ods
   end
+
+  def self.enables
+    search(enable_reminder: true)
+  end
 end

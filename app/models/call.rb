@@ -26,7 +26,8 @@ class Call < ActiveRecord::Base
         phone_number: client.phone_number,
         family_code: client.family_code,
         status: Call::STATUS_ERROR,
-        kind: client.kind)
+        kind: client.kind,
+        od_id: client.od_id)
       call.save!
 
       call
