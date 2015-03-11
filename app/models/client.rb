@@ -49,7 +49,7 @@ class Client < ActiveRecord::Base
       end
     end
 
-    Service::Verboice.bulk_call(queued_calls) unless queued_calls.empty?
+    Service::Verboice.bulk_enqueue!(queued_calls) unless queued_calls.empty?
   end
 
   def kind_text

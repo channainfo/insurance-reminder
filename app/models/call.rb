@@ -25,6 +25,7 @@ class Call < ActiveRecord::Base
         expiration_date: client.expiration_date,
         phone_number: client.phone_number,
         family_code: client.family_code,
+        full_name: client.full_name,
         status: Call::STATUS_ERROR,
         kind: client.kind,
         od_id: client.od_id)

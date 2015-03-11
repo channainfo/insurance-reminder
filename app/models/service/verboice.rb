@@ -15,43 +15,37 @@ class Service::Verboice
     @token = token
   end
 
-  def bulk_call(queued_calls)
-    options = queued_calls.map { |call| call.to_verboice_params }
+  def bulk_enqueue!(calls)
+    options = calls.map { |call| call.to_verboice_params }
     response = post("/bulk_call", {call: options})
     call_response = JSON.parse(response.body)
     call_response.each_with_index do |call_attrs, index|
-      call = queued_calls[index]
+      call = calls[index]
       call.status = Call::STATUS_PENDING
       call.verboice_call_id = call_attrs['call_id']
       call.save!
     end
   end
 
-  def retry_call call
-    if enqueue call
+  def retry_enqueue! call
+    if enqueue! call
       return if call.main.nil?
         
       main_call = call.main
       main_call.status = Call::STATUS_PENDING
-      main_call.save
+      main_call.save!
     end
   end
 
-  def enqueue call
+  def enqueue! call
     options = call.to_verboice_params
     response = post("/call", {call: options})
-    if(response.success?)
-      verboice_call = JSON.parse(response.body)
 
-      call.status = Call::STATUS_PENDING
-      call.verboice_call_id = verboice_call['call_id']
-      call.save
-    end
-  end
+    verboice_call = JSON.parse(response.body)
 
-  def call_logs params = {}
-    verboice_query = auth_params(params.slice(:start_date, :end_date, :channel_id, :status)).to_query
-    get("/call_logs?#{verboice_query}")
+    call.status = Call::STATUS_PENDING
+    call.verboice_call_id = verboice_call['call_id']
+    call.save!
   end
 
   def channels
@@ -71,6 +65,7 @@ class Service::Verboice
   end
 
   private
+
   def get(path)
     response = Typhoeus.get( build_url(path), body: JSON.generate(auth_params), headers: {'content-type' => 'application/json'} )
     JSON.parse(response.response_body)

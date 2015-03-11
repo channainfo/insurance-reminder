@@ -11,27 +11,27 @@
           <div id='alert-add-reminder' class='alert alert-warning' style='display:none'> </div>
 
           <div class='form-group'>
-            <%= hidden_field_tag 'client[kind]', Client::KIND_MANUAL %>
+            <%= hidden_field_tag 'call[kind]', Call::KIND_MANUAL %>
           </div>
 
           <div class='form-group'>
             <%= label_tag :phone_number, 'Phone number', class: 'required' %>
             <span class='error'>*</span>
-            <%= text_field_tag 'client[phone_number]', '', class: 'form-control required' %>
+            <%= text_field_tag 'call[phone_number]', '', class: 'form-control required' %>
           </div>
           <div class='form-group'>
             <%= label_tag :family_code, 'Family code', class: 'required' %>
             <span class='error'>*</span>
-            <%= text_field_tag 'client[family_code]', '', class: 'form-control required' %>
+            <%= text_field_tag 'call[family_code]', '', class: 'form-control required' %>
           </div>
           <div class='form-group'>
             <%= label_tag :full_name %>
-            <%= text_field_tag 'client[full_name]', '', class: 'form-control required' %>
+            <%= text_field_tag 'call[full_name]', '', class: 'form-control required' %>
           </div>
           <div class='form-group'>
             <%= label_tag :expiration_date, 'Expiration date', class: 'required' %>
             <span class='error'>*</span>
-            <%= text_field_tag 'client[expiration_date]', '', class: 'form-control date-picker required' %>
+            <%= text_field_tag 'call[expiration_date]', '', class: 'form-control date-picker required' %>
           </div>
 
           <div class='form-group'>

@@ -1,19 +1,11 @@
 $(function(){
-  $("input#manual").on('change', function() {
-    if(this.checked) {
-      $("#manual-reminder").collapse('show');
-    } else {
-      $("#manual-reminder").collapse('hide');
-    }
-  });
-
   handleAddReminder();
   reloadCallPage();
 });
 
 handleAddReminder = function(){
   $("#btn-add-reminder").on('click', function(){
-    var phoneNumber= $("#client_phone_number").val();
+    var phoneNumber= $("#call_phone_number").val();
     if(phoneNumber == null || phoneNumber == "") {
       showNotification("alert", "Phone number can't be blank");
       return false;
@@ -43,27 +35,27 @@ function submit() {
   $alert = $("#alert-add-reminder");
   $alert.hide();
   
-  var phoneNumber= $("#client_phone_number").val();
+  var phoneNumber= $("#call_phone_number").val();
   if(phoneNumber == null || phoneNumber == "") {
     showNotification("alert", "Phone number can't be blank");
     return;
   };
 
-  var familyCode= $("#client_family_code").val();
+  var familyCode= $("#call_family_code").val();
   if(familyCode == null || familyCode == "") {
     showNotification("alert", "Family code can't be blank");
     return;
   };
 
-  var fullName= $("#client_full_name").val();
+  var fullName= $("#call_full_name").val();
 
-  var expirationDate= $("#client_expiration_date").val();
+  var expirationDate= $("#call_expiration_date").val();
   if(!isDateFormat(expirationDate)) {
     showNotification("alert", "Expiration date can't be blank");
     return;
   };
 
-  var kind = $("#client_kind").val();
+  var kind = $("#call_kind").val();
   if(kind == null || kind == "") {
     showNotification("alert", "Kind can't be blank");
     return;
@@ -72,7 +64,7 @@ function submit() {
   var url = $("#form-add-reminder").attr("action");
 
   var data = {
-    client: {
+    call: {
       phone_number: phoneNumber,
       family_code: familyCode,
       full_name: fullName,
@@ -89,8 +81,7 @@ function submit() {
     success: function(response){
       if(response['status'] == 0) {
         showNotification('alert', response['message']);
-      }
-      else {
+      } else {
         showNotification('notice', response['message']);
       }
     }
