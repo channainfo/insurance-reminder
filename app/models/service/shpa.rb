@@ -11,16 +11,23 @@ module Service
 
     def fetch_by(params = {})
       url = build_url("beneficiaries")
-      response = Typhoeus.get(url, params: params, userpwd: "#{@username}:#{@password}")
+      response = Typhoeus.get(url, headers: {'Content-Type'=> "application/json"}, body: to_json(params), userpwd: "#{@username}:#{@password}")
       response.success? ? JSON.parse(response.response_body) : nil
     end
+
+    def expired_between_in_od from_date, to_date, od_ids
+      fetch_by(from_date: from_date, to_date: to_date, od_ids: od_ids)
+    end
+
+    private
 
     def build_url(path)
       ENV['SHPA_API_URL'] + "/" + path
     end
 
-    def expired_between from_date, to_date
-      fetch_by(from_date: from_date, to_date: to_date)
+    def to_json params
+      JSON.generate(params)
     end
+
   end
 end

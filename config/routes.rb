@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :operational_districts
+
   root 'calls#index'
 
   get 'search' => 'calls#index'
