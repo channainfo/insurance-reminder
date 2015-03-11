@@ -9,8 +9,7 @@ module VerboiceParameterize
       vars: {
         year: self.expiration_date.year,
         month: self.expiration_date.month,
-        day: self.expiration_date.day,
-        family_code: self.family_code
+        day: self.expiration_date.day
       }
     }
   end

@@ -63,8 +63,9 @@ class Call < ActiveRecord::Base
     end
 
     def mark_delay_as_error_before! datetime
-      main_calls.each do |call|
-        if call.pending? && call.past_of?(datetime)
+      pendings_call = Call.where(['status = ?', Call::STATUS_PENDING])
+      pendings_call.each do |call|
+        if call.updated_at <= datetime
           call.status = Call::STATUS_ERROR
           call.save!
         end
@@ -103,10 +104,6 @@ class Call < ActiveRecord::Base
 
   def reaches_max_recalls?
     (calls_count + 1) >= Setting[:recalls].to_i # late 1 when sub call was retried in counter_cached
-  end
-
-  def past_of?(datetime)
-    updated_at <= datetime
   end
 
   def mark_as_error!
