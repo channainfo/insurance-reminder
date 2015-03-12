@@ -27,14 +27,24 @@ class Service::Verboice
     end
   end
 
-  def retry_enqueue! call
-    if enqueue! call
-      return if call.main.nil?
-        
-      main_call = call.main
-      main_call.status = Call::STATUS_PENDING
-      main_call.save!
-    end
+  def retry_enqueue! main_call
+
+    retry_call = Call.new(expiration_date: main_call.expiration_date,
+                          phone_number: main_call.phone_number,
+                          family_code: main_call.family_code,
+                          status: Call::STATUS_ERROR,
+                          client_id: main_call.try(:client).try(:id),
+                          kind: Call::KIND_MANUAL,
+                          main: main_call)
+
+    retry_call.save
+    main_call.status = Call::STATUS_ERROR
+    main_call.save!
+
+    enqueue!(retry_call)
+
+    main_call.status = Call::STATUS_PENDING
+    main_call.save!
   end
 
   def enqueue! call

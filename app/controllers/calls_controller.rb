@@ -10,12 +10,13 @@ class CallsController < ApplicationController
   end
 
   def create
+    options = protected_params.merge(kind: Call::KIND_MANUAL, status: Call::STATUS_ERROR)
     call = Call.new protected_params
     if call.save
       begin
         Service::Verboice.connect.enqueue!(call)
         render json: {status: 1, message: "Reminder has been created"}
-      rescue
+      rescue JSON::ParserError
         render json: {status: 0, message: "Could not connect to verboice"}
       end
     else
@@ -29,22 +30,11 @@ class CallsController < ApplicationController
   end
 
   def retry
-    call = Call.find(params[:id])
-
-    retry_call = Call.new(
-      expiration_date: call.expiration_date,
-      phone_number: call.phone_number,
-      family_code: call.family_code,
-      status: Call::STATUS_ERROR,
-      client_id: call.try(:client).try(:id),
-      kind: Call::KIND_MANUAL,
-      main: call)
-    retry_call.save
-
+    main_call = Call.find(params[:id])
     begin
-      Service::Verboice.connect.retry_enqueue!(retry_call)
+      Service::Verboice.connect.retry_enqueue!(main_call)
       redirect_to calls_path(), notice: "Call has been retried"
-    rescue
+    rescue JSON::ParserError
       redirect_to calls_path(), alert: "Could not connect to Verboice"
     end
   end
@@ -71,7 +61,7 @@ class CallsController < ApplicationController
   private
 
   def protected_params
-    params.require(:call).permit(:phone_number, :family_code, :full_name, :expiration_date, :kind)
+    params.require(:call).permit(:phone_number, :family_code, :full_name, :expiration_date)
   end
 
   def authenticate_spa_service!
