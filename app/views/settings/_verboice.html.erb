@@ -41,7 +41,7 @@
     $select.find("option[value!='']").remove()
 
     $.each(resultSets, function(index, item){
-      var $option = $("<option>" + item.name + "</option>", {value: item.id})
+      var $option = $("<option>" + item.name + "</option>").attr('value', item.id)
       $select.append($option)
     })
   }
