@@ -3,10 +3,6 @@ default: &default
 
   APP_NAME: "Insurance Reminder"
   VERBOICE_URL: http://localhost:3030/api2
-  EMAIL: 'example@verboice.org'
-  PASSWORD: ''
-  CHANNEL_ID: ''
-  CALL_FLOW_ID: ''
 
 development:
   <<: *default
