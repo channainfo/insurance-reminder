@@ -9,10 +9,8 @@
 # Default Setting
 Setting[:day_before_expiration_date] = 7
 Setting[:recalls] = 3
-Setting[:call_time] = '11:30'
 
 # Default user
-
 user_attrs = { username: 'admin', password: '123456', name: 'Admin', role: User::ROLE_ADMIN }
 
 user = User.where(username: user_attrs[:username]).first_or_initialize
@@ -37,18 +35,12 @@ clients = Client.all
 (0..5).each do
   client = clients[(0..3).to_a.sample]
 
-  call = client.calls.build(expiration_date: client.expiration_date,
-                            phone_number: client.phone_number,
-                            family_code: client.family_code,
-                            status: Call::STATUS_ERROR)
+  call = Call.new_from(client)
   call.save!
 
   (0..5).to_a.sample.times.each.each do |index|
-    retry_call = client.calls.build(expiration_date: client.expiration_date,
-                                    phone_number: client.phone_number,
-                                    family_code: client.family_code,
-                                    main: call,
-                                    status: Call::STATUS_ERROR)
+    retry_call = Call.new_from(client)
+    retry_call.main = call
     retry_call.save!
   end
 end
