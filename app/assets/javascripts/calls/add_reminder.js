@@ -1,7 +1,15 @@
 $(function(){
+  clearForm()
   handleAddReminder();
   reloadCallPage();
 });
+
+function clearForm(){
+  $('#new-reminder').on('shown.bs.modal', function (e) {
+    $("#form-add-reminder")[0].reset()
+    return true
+  })
+}
 
 handleAddReminder = function(){
   $("#btn-add-reminder").on('click', function(){

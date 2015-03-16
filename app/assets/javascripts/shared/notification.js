@@ -25,7 +25,7 @@ function setNotification(key, value) {
     $notification.show()
     var notificationHtml = tmpl('tmpl-notification', templateData)
     $notification.html(notificationHtml)
-    $notification.fadeOut(5000)
+    $notification.fadeOut(2000)
   }
   else{
     $notification.hide();

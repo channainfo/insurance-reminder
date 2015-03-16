@@ -50,7 +50,7 @@ class Call < ActiveRecord::Base
         csv << ['Family code', 'Full name', 'Call status', 'Recalls', 'Expiration date', 'Phone number', 'Reminder date']
         find_each do |call|
           recalls = call.calls_count > 0 ? call.calls_count : ''
-          csv << [ call.client.family_code, call.client.full_name, call.status, recalls,
+          csv << [ call.family_code, call.full_name, call.status, recalls,
                    call.expiration_date, call.phone_number, call.created_at.to_date]
         end
       end
@@ -127,7 +127,7 @@ class Call < ActiveRecord::Base
   end
 
   def kind_text
-    kind == KIND_AUTO ? 'Auto' : 'Manual'
+    kind == Call::KIND_AUTO ? 'Auto' : 'Manual'
   end
 
 end

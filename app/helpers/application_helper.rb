@@ -35,4 +35,14 @@ module ApplicationHelper
     params.except(:action, :controller, :utf8)
   end
 
+  def in_local_time_zone datetime
+    in_time_zone_string(datetime, ENV['LOCAL_TZ'])
+  end
+
+  def in_time_zone_string datetime, time_zone = "UTC"
+    format = '%Y-%m-%d %H:%M %z'
+    zone = datetime.in_time_zone(time_zone)
+    zone.strftime(format)
+  end
+
 end

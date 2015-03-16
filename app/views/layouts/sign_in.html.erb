@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap 101 Template</title>
+    <title><%= content_for?(:title) ? yield(:title) : ENV['APP_NAME'] %></title>
 
     <!-- Bootstrap -->
       <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
@@ -20,11 +20,16 @@
       <%= render 'layouts/shared/config' %>
   </head>
   <body>
+    <%= render 'layouts/shared/menu_sign_in' %>
     <div class='container'>
-      <div class='form-signin'>
-        <%= flash_messages %>
-        <%= render 'layouts/shared/notification' %>
-        <%= yield %>
+      <div class='form-signin panel panel-default'>
+        <h3 style='margin-left: 15px;' > Please Login </h3>
+        <div class='panel-body'>
+          <%= flash_messages %>
+          <%= render 'layouts/shared/notification' %>
+          <%= yield %>
+        </div>
+
       </div>
     </div>
     <%= yield(:footer) if content_for?(:footer) %>

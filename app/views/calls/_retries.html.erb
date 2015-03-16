@@ -12,10 +12,10 @@
         <table class='table table-strip'>
           <thead>
             <tr>
-              <th>#</td>
-              <th>Status</td>
-              <th>Called at</td>
-              <th>Type</td>
+              <td>#</td>
+              <td>Status</td>
+              <td>Called at</td>
+              <td>Type</td>
             </tr>
           </thead>
           <tbody>
@@ -23,7 +23,7 @@
               <tr>
                 <td><%= index + 1 %></td>
                 <td><%= retry_call.status %></td>
-                <td><%= retry_call.created_at %></td>
+                <td><%= in_local_time_zone(retry_call.created_at) %></td>
                 <td><%= retry_call.kind_text %></td>
               </tr>
             <% end %>

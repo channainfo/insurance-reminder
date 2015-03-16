@@ -11,7 +11,7 @@ class CallsController < ApplicationController
 
   def create
     options = protected_params.merge(kind: Call::KIND_MANUAL, status: Call::STATUS_ERROR)
-    call = Call.new protected_params
+    call = Call.new options
     if call.save
       begin
         Service::Verboice.connect.enqueue!(call)

@@ -16,12 +16,12 @@
 <table class='table table-strip table-hover'>
   <thead>
     <tr>
-      <th>#</th>
-      <th>Name</th>
-      <th>Code</th>
-      <th>External</th>
-      <th>Reminder enabled</th>
-      <th width="160">Action</th>
+      <td>#</td>
+      <td>Name</td>
+      <td>Code</td>
+      <td>External</td>
+      <td>Reminder enabled</td>
+      <td width="150">Action</td>
     </tr>
   </thead>
 
@@ -40,11 +40,11 @@
         <td><%= operational_district.external_id %></td>
         <td><%= check_box_tag '', '',  operational_district.enable_reminder, disabled: true %></td>
         <td>
-          <%= link_to edit_operational_district_path(operational_district), class: 'btn btn-sm btn-primary' do %>
+          <%= link_to edit_operational_district_path(operational_district), class: 'btn btn-xs btn-primary' do %>
             <i class='glyphicon glyphicon-pencil'> </i> Edit
           <% end %>
-          <%= link_to operational_district_path(operational_district), method: :delete, data: {confirm: 'Are you sure you want to delete?'}, class: 'btn btn-sm btn-primary' do %>
-            <i class='glyphicon glyphicon-trash'> </i> Remove
+          <%= link_to operational_district_path(operational_district), method: :delete, data: {confirm: 'Are you sure you want to delete?'}, class: 'btn btn-xs btn-danger' do %>
+            <i class='glyphicon glyphicon-minus'> </i> Delete
           <% end %>
         </td>
       </tr>
