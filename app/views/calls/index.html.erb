@@ -20,6 +20,11 @@
       </div>
 
       <div class='input-row col-lg-2'>
+        <%= label_tag :phone_number %>
+        <%= text_field_tag :phone_number, params[:phone_number], class: 'form-control' %>
+      </div>
+
+      <div class='input-row col-lg-2'>
         <%= label_tag :expiration_date_start %>
         <%= text_field_tag :expiration_date_start, params[:expiration_date_start], class: 'form-control date-picker' %>
       </div>
@@ -57,6 +62,7 @@
 <table class='table table-strip table-hover'>
   <thead>
     <tr>
+      <td></td>
       <td>Family code</td>
       <td>Full name</td>
       <td>Call status</td>
@@ -73,6 +79,9 @@
   <tbody>
     <% @calls.each_with_index do |call, index| %>
       <tr>
+        <td>
+          <input type="checkbox" class="checkDisabled" value="<%= call.id %>">
+        </td>
         <td><%= call.family_code %></td>
         <td><%= call.full_name %></td>
         <td><%= call.status %></td>
@@ -97,4 +106,15 @@
     <% end %>
   </tbody>
 </table>
+<div class='clearfix' style="padding-bottom: 10px;">
+  <div class='pull-right'>
+    <button class='btn btn-danger' onclick="disableCall()">
+      <i class='glyphicon glyphicon-remove'> </i> Mark as Disabled
+    </button>
+  </div>
+</div>
+<div>
+  <span class="badge" style="padding:5px;margin-right:5px;">Display record : <%= @calls.size %> / <%= @calls.total_count %>
+  </span>
+</div>
 <%= paginate @calls, theme: 'twitter-bootstrap-3' %>

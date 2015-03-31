@@ -9,5 +9,6 @@ set :output, "/tmp/insurance_reminder/cron_log.log"
 # see Capistrano roles section below
 every :hour, :roles => [:app] do
   rake "shpa:import_beneficiaries_expired"
+  rake "shpa:call_records_expired"
   rake "shpa:update_delay_call_as_error"
 end

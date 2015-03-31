@@ -35,8 +35,8 @@
     <% @operational_districts.each_with_index do |operational_district, index| %>
       <tr>
         <td><%= index + 1 %></td>
-        <td><%= operational_district.code %></td>
         <td><%= operational_district.name %></td>
+        <td><%= operational_district.code %></td>
         <td><%= operational_district.external_id %></td>
         <td><%= check_box_tag '', '',  operational_district.enable_reminder, disabled: true %></td>
         <td>

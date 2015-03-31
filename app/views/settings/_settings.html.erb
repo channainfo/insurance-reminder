@@ -1,7 +1,12 @@
 <%= form_tag(update_settings_path, method: :put, class: 'form') do %>
+  <div class="form-group clearfix">
+    <%= label_tag 'pending_call_day', 'Get record in ', class: 'col-sm-2' %>
+    <%= text_field_tag 'pending_call_day', @settings[:pending_call_day], class: 'w65 form-control col-sm-2 numeric', size: 2, maxlength: 2 %>
+    <span class='col-sm-4'>days </span>
+  </div>
 
   <div class="form-group clearfix">
-    <%= label_tag 'day_before_expiration_date', 'Call', class: 'col-sm-2' %>
+    <%= label_tag 'day_before_expiration_date', 'And call', class: 'col-sm-2' %>
     <%= text_field_tag 'day_before_expiration_date', @settings[:day_before_expiration_date], class: 'w65 form-control col-sm-2 numeric', size: 2, maxlength: 2 %>
     <span class='col-sm-4'>days before expiration date</span>
   </div>

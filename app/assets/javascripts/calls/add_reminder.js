@@ -109,3 +109,31 @@ function reloadCallPage() {
     window.location.reload()
   })
 };
+
+function disableCall(){
+  call_ids = getCheckBoxDisable("checkDisabled");
+  ajaxDisableCall(call_ids);
+}
+
+function getCheckBoxDisable(className){
+  elms = $("." + className)
+  call_ids = []
+  for(var i=0; i< elms.length; i++){
+    if(elms[i].checked){
+      call_ids.push(elms[i].value)
+    }
+  }
+  return call_ids;
+}
+
+function ajaxDisableCall(ids){
+  $.ajax({
+    url: RootUrl + "calls/update_status",
+    method: 'POST',
+    dataType: 'json',
+    data: {"ids" : ids},
+    complete: function(response) {
+      window.location.reload();
+    }
+  });
+}

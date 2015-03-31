@@ -13,7 +13,7 @@
     <%= f.input :password_confirmation, placeholder: 'Password confirmation' %>
   </div>
   <div class='input-row'>
-    <%= f.input :role, collection: [User::ROLE_ADMIN, User::ROLE_USER] %>
+    <%= f.input :role, collection: [User::ROLE_ADMIN, User::ROLE_USER, User::ROLE_OPERATOR] %>
   </div>
   <div class='input-row'>
     <%= f.input :name, label: 'Full Name' %>

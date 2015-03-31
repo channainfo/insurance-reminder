@@ -16,7 +16,7 @@ class Service::Verboice
   end
 
   def bulk_enqueue!(calls)
-    options = calls.map { |call| call.to_verboice_params }
+    options = calls.map { |call| call.to_verboice_params if call.status != Call::STATUS_DISABLED }
     response = post("/bulk_call", {call: options})
     call_response = JSON.parse(response.body)
     call_response.each_with_index do |call_attrs, index|

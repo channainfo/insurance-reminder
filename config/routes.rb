@@ -27,6 +27,7 @@ Rails.application.routes.draw do
   end
 
   get 'calls/:phone_number' => 'calls#show'
+  post 'calls/update_status' => 'calls#update_status'
 
   resources :settings, only: [:index]
   put 'update_settings' => 'settings#update_settings'

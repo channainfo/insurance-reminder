@@ -58,6 +58,16 @@ class CallsController < ApplicationController
     render text: nil
   end
 
+  def update_status
+    ids = params["ids"]
+    calls = Call.find ids
+    calls.each do |c|
+      c.status = Call::STATUS_DISABLED
+      c.save!
+    end
+    render text: "Call with id " + ids.join(",") + " was successfully disabled."
+  end
+
   private
 
   def protected_params

@@ -12,6 +12,7 @@ class User < ActiveRecord::Base
 
   ROLE_ADMIN = "Admin"
   ROLE_USER = "User"
+  ROLE_OPERATOR = "Operator"
 
   def self.authenticate(username, password)
     user = User.find_by!(username: username.downcase)
@@ -26,6 +27,10 @@ class User < ActiveRecord::Base
 
   def user?
     role == ROLE_USER
+  end
+
+  def operator?
+    role == ROLE_OPERATOR
   end
 
   def self.except(user)

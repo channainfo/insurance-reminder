@@ -10,7 +10,7 @@ class SettingsController < ApplicationController
     if params[:tab].present? && params[:tab] == "verboice"
       settings = [:project, :channel, :call_flow, :schedule]
     else
-      settings = [:day_before_expiration_date, :recalls]
+      settings = [:day_before_expiration_date, :recalls, :pending_call_day]
     end
 
     settings.each do |key|

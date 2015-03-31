@@ -36,7 +36,7 @@ class Client < ActiveRecord::Base
   end
 
   def self.import_shpa_beneficiaries_expired_between_in_od from_date, to_date, od_ids
-    queued_calls = []
+    # queued_calls = []
 
     shpa_beneficiaries = get_shpa_beneficiaries_expired_between_in_od(from_date, to_date, od_ids)
 
@@ -45,11 +45,11 @@ class Client < ActiveRecord::Base
 
       if Expiration.register client
         call = Call.new_from(client)
-        queued_calls << call
+        # queued_calls << call
       end
     end
 
-    Service::Verboice.bulk_enqueue!(queued_calls) unless queued_calls.empty?
+    # Service::Verboice.bulk_enqueue!(queued_calls) unless queued_calls.empty?
   end
 
   def kind_text

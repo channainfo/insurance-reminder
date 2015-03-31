@@ -12,7 +12,10 @@ class Call < ActiveRecord::Base
   STATUS_ERROR   = "Error"
   STATUS_RETRIED = "Retried"
   STATUS_SUCCESS = "Success"
-  STATUSES = [STATUS_PENDING, STATUS_FAILED, STATUS_ERROR, STATUS_SUCCESS]
+  STATUS_RETRIEVED = "Retrieved"
+  STATUS_DISABLED = "Disabled"
+  
+  STATUSES = [STATUS_PENDING, STATUS_FAILED, STATUS_ERROR, STATUS_SUCCESS,STATUS_RETRIEVED,STATUS_DISABLED]
 
   KIND_AUTO = 1
   KIND_MANUAL = 2
@@ -26,7 +29,7 @@ class Call < ActiveRecord::Base
         phone_number: client.phone_number,
         family_code: client.family_code,
         full_name: client.full_name,
-        status: Call::STATUS_ERROR,
+        status: Call::STATUS_RETRIEVED,
         kind: client.kind,
         od_id: client.od_id)
       call.save!
@@ -72,6 +75,16 @@ class Call < ActiveRecord::Base
           call.save!
         end
       end
+    end
+
+    def call_records_expired from, to
+      queued_calls = []
+      Call.where("status = ?", Call::STATUS_RETRIEVED).each do |c|
+        if to > c.expiration_date
+          queued_calls << c
+        end
+      end
+      Service::Verboice.connect().bulk_enqueue!(queued_calls) unless queued_calls.empty?
     end
   end
 

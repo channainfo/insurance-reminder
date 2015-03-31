@@ -30,7 +30,7 @@
         <td><%= user.name %></td>
         <td><%= user.role %></td>
         <td>
-          <% if user.user? %>
+          <% if user.user? || user.operator? %>
             <%= link_to edit_user_path(user), class: 'btn btn-xs btn-primary' do %>
               <i class='glyphicon glyphicon-pencil'> </i> edit
             <% end %>
