@@ -6,6 +6,7 @@ class CallsController < ApplicationController
 
   def index
     @calls = Call.main_calls.includes(:client).order('calls.created_at DESC')
+    @calls = @calls.my_ods current_user.get_ods_code
     @calls = @calls.search(params).page(params[:page])
   end
 

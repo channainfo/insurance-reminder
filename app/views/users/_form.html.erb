@@ -13,10 +13,42 @@
     <%= f.input :password_confirmation, placeholder: 'Password confirmation' %>
   </div>
   <div class='input-row'>
-    <%= f.input :role, collection: [User::ROLE_ADMIN, User::ROLE_USER, User::ROLE_OPERATOR] %>
+    <%= f.input :role, collection: current_user.get_roles %>
   </div>
   <div class='input-row'>
     <%= f.input :name, label: 'Full Name' %>
   </div>
+  <%= label_tag :ods, raw("<h4>Institute</h4>") %>
+  <% if @user.errors.any?%>
+    <div class="alert alert-danger">
+      <h4><%= pluralize(@user.errors.count, "error") %> prohibited this post from being saved:</h4>
+      <ul>
+        <% @user.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% if current_user.admin? %>
+    <% current_user.get_organizations.each do |org|%>
+      <div class="funkyradio">
+          <div class="funkyradio-default">
+              <input type="radio" name="user[organizations][]" id="org-<%= org.id %>" value="<%= org.id %>" <%= @user.organizations.include?(org.id.to_s)? "checked" : ""  %> />
+              <label for="org-<%= org.id %>"><%= org.name %></label>
+          </div>
+      </div>
+    <% end %>
+  <% else %>
+    <% current_user.get_ods.each do |od|%>
+      <div class="funkyradio">
+          <div class="funkyradio-default">
+              <input type="checkbox" name="user[ods][]" id="od-<%= od.id %>" value="<%= od.id %>" <%= @user.ods.include?(od.id.to_s)? "checked" : ""  %> />
+              <label style="width:300px;" for="od-<%= od.id %>"><%= od.name %></label>
+          </div>
+      </div>
+    <% end %>
+  <% end %>
+  <br />
   <%= f.button :submit, class: 'btn btn-primary' %>
 <% end %>

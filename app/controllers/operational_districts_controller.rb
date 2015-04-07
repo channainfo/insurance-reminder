@@ -2,7 +2,8 @@ class OperationalDistrictsController < ApplicationController
   before_action :set_operational_district, only: [:edit, :update, :destroy]
 
   def index
-    @operational_districts = OperationalDistrict.search(params).page(params[:page])
+    # @operational_districts = OperationalDistrict.search(params).page(params[:page])
+    @operational_districts = OperationalDistrict.search({:list_code => current_user.get_ods_code}).page(params[:page])
   end
 
   def new

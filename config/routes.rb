@@ -12,6 +12,8 @@ Rails.application.routes.draw do
 
   resources :users
 
+  resources :organizations
+
   resources :call_logs, only: [:index]
   resources :calls, only: [:index, :new, :create] do
     member do

@@ -1,0 +1,49 @@
+<%= page_title "Organization" %>
+
+<h3 class='page-header'>Organization</h3>
+
+<div class='clearfix' style="padding-bottom: 10px;">
+  <div class='pull-left'>
+    <%= paginate @organizations, theme: 'twitter-bootstrap-3' %>
+  </div>
+  <div class='pull-right' style='margin-top: 15px;'>
+    <%= link_to new_organization_path, class: 'btn btn-primary' do %>
+      <i class='glyphicon glyphicon-plus'> </i> New Organization
+    <% end %>
+  </div>
+</div>
+
+<table class='table table-strip table-hover'>
+  <thead>
+    <tr>
+      <td>#</td>
+      <td>Name</td>
+      <td width="150">Action</td>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% if @organizations.empty? %>
+      <tr class='error'>
+        <td colspan='6'>No record</td>
+      </tr>
+    <% end %>
+
+    <% @organizations.each_with_index do |organization, index| %>
+      <tr>
+        <td><%= index + 1 %></td>
+        <td><%= organization.name %></td>
+        <td>
+          <%= link_to edit_organization_path(organization), class: 'btn btn-xs btn-primary' do %>
+            <i class='glyphicon glyphicon-pencil'> </i> Edit
+          <% end %>
+          <%= link_to organization_path(organization), method: :delete, data: {confirm: 'Are you sure you want to delete?'}, class: 'btn btn-xs btn-danger' do %>
+            <i class='glyphicon glyphicon-minus'> </i> Delete
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= paginate @organizations, theme: 'twitter-bootstrap-3' %>

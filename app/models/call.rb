@@ -67,6 +67,10 @@ class Call < ActiveRecord::Base
       where('main_id is NULL')
     end
 
+    def my_ods ods
+      where(" od_id in (?)", ods)
+    end
+
     def mark_delay_as_error_before! datetime
       pendings_call = Call.where(['status = ?', Call::STATUS_PENDING])
       pendings_call.each do |call|
