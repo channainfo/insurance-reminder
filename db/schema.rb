@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150403021318) do
+ActiveRecord::Schema.define(version: 20150420082239) do
 
   create_table "calls", force: :cascade do |t|
     t.integer  "client_id",        limit: 4
@@ -55,6 +55,17 @@ ActiveRecord::Schema.define(version: 20150403021318) do
   end
 
   add_index "expirations", ["date"], name: "index_expirations_on_date", using: :btree
+
+  create_table "od_settings", force: :cascade do |t|
+    t.integer  "day_expired_get_record",  limit: 4
+    t.integer  "day_expired_call",        limit: 4
+    t.integer  "number_mark_as_failed",   limit: 4
+    t.integer  "operational_district_id", limit: 4
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
+  end
+
+  add_index "od_settings", ["operational_district_id"], name: "index_od_settings_on_operational_district_id", using: :btree
 
   create_table "operational_districts", force: :cascade do |t|
     t.string   "name",            limit: 255

@@ -11,6 +11,24 @@ class OperationalDistrictsController < ApplicationController
   end
 
   def edit
+    @operational_district = OperationalDistrict.find params[:id]
+    @settings = @operational_district.od_setting
+  end
+
+  def update_settings
+    @operational_district = OperationalDistrict.find params[:id]
+    @settings = @operational_district.od_setting
+    @settings.update_attributes!( :day_expired_get_record => params[:day_expired_get_record], 
+                                  :day_expired_call => params[:day_expired_call], 
+                                  :number_mark_as_failed => params[:number_mark_as_failed])
+    render :edit
+  end
+
+  def update_status
+    @operational_district = OperationalDistrict.find params[:id]
+    @operational_district.enable_reminder = !@operational_district.enable_reminder
+    @operational_district.save!
+    render :json => @operational_district
   end
 
   def create

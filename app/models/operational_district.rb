@@ -3,6 +3,9 @@ class OperationalDistrict < ActiveRecord::Base
   validates :code, uniqueness: { case_sensitive: false }
   validates :external_id, uniqueness: true
 
+  after_create :create_setting
+  has_one :od_setting
+
   def self.search options = {}
     ods = where("1=1")
     ods = ods.where(['code = ?', options[:code]]) if options[:code].present?
@@ -25,5 +28,14 @@ class OperationalDistrict < ActiveRecord::Base
     end
     drop_sql = "drop table #{table_name}"
     ActiveRecord::Base.connection.execute(drop_sql)
+  end
+
+  def create_setting
+    OdSetting.create!(
+      :day_expired_get_record => Setting[:pending_call_day], 
+      :day_expired_call => Setting[:day_before_expiration_date], 
+      :number_mark_as_failed => Setting[:recalls], 
+      :operational_district_id => self.id
+    )
   end
 end

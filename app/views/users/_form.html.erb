@@ -18,7 +18,11 @@
   <div class='input-row'>
     <%= f.input :name, label: 'Full Name' %>
   </div>
-  <%= label_tag :ods, raw("<h4>Institute</h4>") %>
+  <% if current_user.admin? %>
+    <%= label_tag :ods, raw("<h4>Organization</h4>") %>
+  <% else %>
+    <%= label_tag :ods, raw("<h4>Operational District</h4>") %>
+  <% end %>
   <% if @user.errors.any?%>
     <div class="alert alert-danger">
       <h4><%= pluralize(@user.errors.count, "error") %> prohibited this post from being saved:</h4>

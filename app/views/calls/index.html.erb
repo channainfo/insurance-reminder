@@ -14,12 +14,6 @@
       </div>
 
       <div class='input-row col-lg-2'>
-        <%= label_tag :status, 'Call Status' %>
-        <%= select_tag :status, options_for_select(Call::STATUSES.map{|status| [status, status] }, params[:status]),
-                       class: 'form-control', include_blank: true %>
-      </div>
-
-      <div class='input-row col-lg-2'>
         <%= label_tag :phone_number %>
         <%= text_field_tag :phone_number, params[:phone_number], class: 'form-control' %>
       </div>
@@ -35,6 +29,16 @@
       </div>
 
       <div class='input-row col-lg-2'>
+        <%= label_tag :status, 'Call Status' %>
+        
+        <select id="status" name="status[]" class="form-control" multiple="multiple">
+          <% Call::STATUSES.each do |status| %>
+            <option value="<%=status%>" <%= (params[:status].present? and params[:status].include?(status))? "selected" : ""%>><%=status%></option>
+          <% end %>
+        </select>
+      </div>
+
+      <div class='input-row col-lg-2' style="text-align:right;">
         <button class='btn btn-primary' style='margin-top: 25px;'>
           <i class='glyphicon glyphicon-search'> </i> Search
         </button>
@@ -42,6 +46,26 @@
     <% end %>
   </div>
 </div>
+
+<% Call::STATUSES.each do |status| %>
+  <% if @data_by_status[status].present? %>
+    <div class="progress">
+      <div class="progress-bar" role="progressbar" aria-valuenow="<%= @data_by_status[status] * 100 / @calls.total_count %>" aria-valuemin="0" aria-valuemax="100" style="width: <%= @data_by_status[status] * 100 / @calls.total_count %>%;">
+          <span class="sr-only"><%= @data_by_status[status] * 100 / @calls.total_count %>% Complete</span>
+      </div>
+      <span class="progress-type"><%= status + " (#{@data_by_status[status]})" %></span>
+      <span class="progress-completed"><%= @data_by_status[status] * 100 / @calls.total_count %>%</span>
+    </div>
+  <% else %>
+    <div class="progress">
+      <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+          <span class="sr-only">0</span>
+      </div>
+      <span class="progress-type"><%= status %></span>
+      <span class="progress-completed">0%</span>
+    </div>
+  <% end %>
+<% end %>
 
 <div class='clearfix' style="padding-bottom: 10px;">
   <div class='pull-left'>
@@ -118,3 +142,6 @@
   </span>
 </div>
 <%= paginate @calls, theme: 'twitter-bootstrap-3' %>
+<script type="text/javascript">
+$("#status").multiselect();
+</script>

@@ -35,10 +35,15 @@ class Client < ActiveRecord::Base
     Service::Shpa.connect.expired_between_in_od from_date, to_date, od_ids
   end
 
-  def self.import_shpa_beneficiaries_expired_between_in_od from_date, to_date, od_ids
+  def self.import_shpa_beneficiaries_expired_between_in_od od_ids
     # queued_calls = []
-
-    shpa_beneficiaries = get_shpa_beneficiaries_expired_between_in_od(from_date, to_date, od_ids)
+    shpa_beneficiaries = []
+    from_date = Date.today
+    od_ids.each do |id|
+      od = OperationalDistrict.find id
+      to_date = from_date + (od.od_setting.day_expired_get_record.to_i - 1).days
+      shpa_beneficiaries.concat get_shpa_beneficiaries_expired_between_in_od(from_date, to_date, od_ids)
+    end
 
     import(shpa_beneficiaries) do |client|
       next if client.phone_number.blank? or client.expiration_date.nil?

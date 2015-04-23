@@ -6,8 +6,9 @@ class CallsController < ApplicationController
 
   def index
     @calls = Call.main_calls.includes(:client).order('calls.created_at DESC')
-    @calls = @calls.my_ods current_user.get_ods_code
+    @calls = @calls.my_ods current_user.get_ods_external_code
     @calls = @calls.search(params).page(params[:page])
+    @data_by_status = count_by_status @calls
   end
 
   def create
@@ -79,5 +80,17 @@ class CallsController < ApplicationController
     authenticate_or_request_with_http_basic do |username, password|
       username == ENV['SHPA_USERNAME'] && password == ['SHPA_USERNAME']
     end
+  end
+
+  def count_by_status calls
+    data = {}
+    calls.each do |c|
+      if data[c.status].present?
+        data[c.status] = data[c.status] + 1
+      else
+        data[c.status] = 1
+      end
+    end
+    return data
   end
 end

@@ -18,6 +18,7 @@
 //= require bootstrap-sprockets
 
 //= require bootstrap-datepicker
+//= require bootstrap-multiselect
 //= require lib/jquery.control-key-.1.0
 
 //= require shared/notification
@@ -28,3 +29,5 @@
 
 //= require settings/form
 //= require calls/add_reminder
+//= require operational_districts/update_od
+

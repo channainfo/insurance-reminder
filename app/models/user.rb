@@ -57,15 +57,11 @@ class User < ActiveRecord::Base
     if self.role == ROLE_ADMIN
       orgs = Organization.all
     elsif self.role == ROLE_OPERATOR
-      orgs = Organization.find self.organizations 
+      orgs = Organization.where("id in (?)",self.organizations)
     else
       orgs = Organization.all.select { |m| m.ods.include? self.ods.first}
     end
-    list = []
-    orgs.each do |od|
-      list.push(od.id)
-    end
-    return list
+    return orgs.pluck(:id)
   end
 
   def get_organizations
@@ -79,20 +75,23 @@ class User < ActiveRecord::Base
     return orgs
   end
 
+  def get_ods_external_code
+    return get_ods.pluck(:external_id)
+  end
+
   def get_ods_code
+    return get_ods.pluck(:code)
+  end
+
+  def get_ods
     if self.role == ROLE_ADMIN
       ods = OperationalDistrict.all
     elsif self.role == ROLE_OPERATOR
       org = Organization.find self.organizations.first
-      ods = OperationalDistrict.find org.ods 
+      ods = OperationalDistrict.where("id in (?)",org.ods)
     else
-      ods = OperationalDistrict.find self.ods 
+      ods = OperationalDistrict.where("id in (?)",self.ods)
     end
-    list = []
-    ods.each do |od|
-      list.push(od.code)
-    end
-    return list
   end
 
   def self.get_involved_users user

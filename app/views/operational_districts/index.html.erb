@@ -38,7 +38,7 @@
         <td><%= operational_district.name %></td>
         <td><%= operational_district.code %></td>
         <td><%= operational_district.external_id %></td>
-        <td><%= check_box_tag '', '',  operational_district.enable_reminder, disabled: true %></td>
+        <td><%= check_box_tag '', '',  operational_district.enable_reminder, :onclick => "updateODReminder(#{operational_district.id})" %></td>
         <td>
           <%= link_to edit_operational_district_path(operational_district), class: 'btn btn-xs btn-primary' do %>
             <i class='glyphicon glyphicon-pencil'> </i> Edit

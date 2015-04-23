@@ -41,7 +41,7 @@ class Call < ActiveRecord::Base
       calls = where("1=1")
       calls = calls.where(['phone_number = ?', options[:phone_number]]) if options[:phone_number].present?
       calls = calls.where(['family_code = ?', options[:family_code]]) if options[:family_code].present?
-      calls = calls.where(['status = ?', options[:status]]) if options[:status].present?
+      calls = calls.where(['status in (?)', options[:status]]) if options[:status].present?
       calls = calls.where(['family_code = ?', options[:family_code]]) if options[:family_code].present?
       calls = calls.where(['calls.expiration_date >= ?', options[:expiration_date_start]]) if options[:expiration_date_start].present?
       calls = calls.where(['calls.expiration_date <= ?', options[:expiration_date_end]]) if options[:expiration_date_end].present?
@@ -81,9 +81,13 @@ class Call < ActiveRecord::Base
       end
     end
 
-    def call_records_expired from, to
+    def call_records_expired
+      from_date = Date.today
+      
       queued_calls = []
       Call.where("status = ?", Call::STATUS_RETRIEVED).each do |c|
+        od = OperationalDistrict.where("external_id = ?", c.od_id)
+        to = from_date + (od[0].od_setting.day_expired_call.to_i - 1).days
         if to > c.expiration_date
           queued_calls << c
         end

@@ -1,5 +1,14 @@
 Rails.application.routes.draw do
-  resources :operational_districts
+  resources :operational_districts do
+    member do 
+      put 'update_settings'
+    end
+
+    collection do 
+      post 'update_status'
+    end
+  end
+
 
   root 'calls#index'
 

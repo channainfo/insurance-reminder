@@ -1,5 +1,20 @@
 <%= page_title "Edit OD" %>
-
 <h3 class='page-header'>Edit Operational District</h3>
+<ul class="nav nav-tabs">
+  <li class="<%= tab_active_for(:default) %>">
+  	<%= link_to 'Information', edit_operational_district_path(@operational_district) %>
+  </li>
 
-<%= render 'form' %>
+  <li class="<%= tab_active_for(:setting) %>">
+     <%= link_to 'Settings', edit_operational_district_path(tab: :setting ) %>
+  </li>
+</ul>
+
+<div style='padding: 15px 0px;'>
+  
+  <% if tab_active_for(:default) == 'active' %>
+		<%= render 'form' %>
+  <% else %>
+    <%= render 'form_setting' %>
+  <% end %>
+</div>
