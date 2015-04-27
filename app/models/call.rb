@@ -86,6 +86,7 @@ class Call < ActiveRecord::Base
       
       queued_calls = []
       Call.where("status = ?", Call::STATUS_RETRIEVED).each do |c|
+        p c
         od = OperationalDistrict.where("external_id = ?", c.od_id)
         to = from_date + (od[0].od_setting.day_expired_call.to_i - 1).days
         if to > c.expiration_date
