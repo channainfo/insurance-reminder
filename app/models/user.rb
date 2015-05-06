@@ -40,35 +40,38 @@ class User < ActiveRecord::Base
     where(["id != ?", user.id])
   end
 
-  def get_ods
+  def editable? user
     if self.role == ROLE_ADMIN
-      return OperationalDistrict.all
-    elsif self.role == ROLE_OPERATOR
-      organizations = Organization.find self.organizations
-      ods = []
-      organizations.each do |org|
-        ods.concat OperationalDistrict.find org.ods
+      if id == user.id
+        return false
+      else
+        if user.role == ROLE_USER
+          return false
+        else
+          return true
+        end
       end
-      return ods
+    elsif self.role == ROLE_OPERATOR
+      return true
+    else
+      return false
     end
   end
 
   def get_organization_ids
-    if self.role == ROLE_ADMIN
-      orgs = Organization.all
-    elsif self.role == ROLE_OPERATOR
-      orgs = Organization.where("id in (?)",self.organizations)
+    orgs = get_organizations
+    unless role == ROLE_USER
+      return orgs.pluck(:id)
     else
-      orgs = Organization.all.select { |m| m.ods.include? self.ods.first}
+      return []
     end
-    return orgs.pluck(:id)
   end
 
   def get_organizations
     if self.role == ROLE_ADMIN
       orgs = Organization.all
     elsif self.role == ROLE_OPERATOR
-      orgs = Organization.find self.organizations 
+      orgs = Organization.where("id in (?)",self.organizations)
     else
       orgs = Organization.all.select { |m| m.ods.include? self.ods.first}
     end

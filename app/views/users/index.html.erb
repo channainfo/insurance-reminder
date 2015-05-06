@@ -31,7 +31,7 @@
         <td><%= user.role %></td>
         <td><%= user.get_organizations[0].name unless user.admin? %></td>
         <td>
-          <% unless user.admin? %>
+          <% if current_user.editable? user %>
             <%= link_to edit_user_path(user), class: 'btn btn-xs btn-primary' do %>
               <i class='glyphicon glyphicon-pencil'> </i> edit
             <% end %>
