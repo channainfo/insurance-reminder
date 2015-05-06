@@ -5,8 +5,10 @@ class User < ActiveRecord::Base
   validates :username, presence: true, uniqueness: true
   validates :role, presence: true
 
-  validates :password, presence: true
+  validates :password, presence: true, on: :create
   validates :password, confirmation: true
+
+  attr_accessor :old_password
 
   validates :organizations, presence: true, if: :operator?
   validates :ods, presence: true, if: :user?
@@ -128,6 +130,18 @@ class User < ActiveRecord::Base
 
   def is?(user)
     self.id == user.id
+  end
+  
+  def change_password old_password, new_password, confirmation_password
+    if self.authenticate(old_password)
+      self.password = new_password
+      self.password_confirmation = confirmation_password
+
+      save
+    else
+      errors.add(:old_password, 'does not matched')
+      false
+    end
   end
 
   private

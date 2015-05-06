@@ -19,7 +19,10 @@ Rails.application.routes.draw do
 
   resources :sessions, only: [:index, :create, :destroy]
 
-  resources :users
+  resources :users do
+    get :profile, on: :collection
+    put :change_password, on: :collection
+  end
 
   resources :organizations
 
