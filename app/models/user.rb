@@ -22,6 +22,24 @@ class User < ActiveRecord::Base
   serialize :organizations, Array
   serialize :ods, Array
 
+  def reset_password_to new_password
+    self.password = new_password
+
+    save
+  end
+
+  def change_password old_password, new_password, new_password_confirmation
+    if self.authenticate(old_password)
+      self.password = new_password
+      self.password_confirmation = new_password_confirmation
+
+      save
+    else
+      errors.add(:old_password, 'does not matched')
+      false
+    end
+  end
+
   def self.authenticate(username, password)
     user = User.find_by!(username: username.downcase)
     user.authenticate(password)
@@ -132,18 +150,6 @@ class User < ActiveRecord::Base
     self.id == user.id
   end
   
-  def change_password old_password, new_password, confirmation_password
-    if self.authenticate(old_password)
-      self.password = new_password
-      self.password_confirmation = confirmation_password
-
-      save
-    else
-      errors.add(:old_password, 'does not matched')
-      false
-    end
-  end
-
   private
 
   def downcase_username!

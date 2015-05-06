@@ -2,10 +2,9 @@ require 'rails_helper'
 
 RSpec.describe User, :type => :model do
   describe 'validations' do
-    it {should validate_uniqueness_of(:username)}
+    it { should validate_uniqueness_of(:username) }
     it { should validate_presence_of(:password).on(:create) }
     it { should have_secure_password }
-
   end
 
   describe User, '.authenticate' do
@@ -23,24 +22,44 @@ RSpec.describe User, :type => :model do
   end
 
   describe User, "get data as admin" do
-    od = OperationalDistrict.create(:name => "OD", :external_id =>100022, :code => '122343')
-    org = Organization.create(:name => "Org111", :ods => [od.id])
-    user = User.create(username: 'admin', password: '123456', name: 'Admin', role: User::ROLE_ADMIN)
+    before(:each) do
+      @od = create(:operational_district, :name => "OD", :external_id => 100022, :code => '122343')
+      @org = create(:organization, :name => "Org", :ods => [@od.id])
+      @user = create(:user, username: 'admin', password: '123456', name: 'Admin', role: User::ROLE_ADMIN)
+    end
+    
     it 'should have user admin' do
-      expect(user.username).to eq("admin")
-      expect(user.ods).to eq([])
-      expect(user.organizations).to eq([])
+      expect(@user.username).to eq("admin")
+      expect(@user.ods).to eq([])
+      expect(@user.organizations).to eq([])
     end
 
     it 'should have one od' do
-      expect(user.get_ods.size).to eq(1)
+      expect(@user.get_ods.size).to eq(1)
     end
 
     it 'should have one Organization' do
       expect(Organization.all.size).to eq(1)
       expect(Organization.first.name).to eq('Org')
-      expect(org.id).to eq(2)
-      expect(user.get_organization_ids).to eq([org.id])
+      expect(@user.get_organization_ids).to eq([@org.id])
+    end
+  end
+
+  context "reset password" do
+    let(:user) { create(:user, username: 'user@example.com', password: 'secret123') }
+
+    it "set a new password" do
+      user.reset_password_to("123456")
+      expect(user.password).to eq('123456')
+    end
+  end
+
+  context "change password" do
+    let(:user) { create(:user, username: 'user@example.com', password: 'secret123') }
+
+    it "update to a new password" do
+      user.change_password('secret123', '123456', '123456')
+      expect(user.password).to eq('123456')
     end
   end
 

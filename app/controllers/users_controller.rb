@@ -72,6 +72,15 @@ class UsersController < ApplicationController
     render :profile
   end
 
+  def reset_password
+    @user = User.find(params[:id])
+    @random_password = SecureRandom.hex(3)
+    if @user.reset_password_to(@random_password)
+    else
+      render :edit
+    end
+  end
+
   private
 
   def validate_existing model, list, role

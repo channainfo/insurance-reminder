@@ -64,5 +64,7 @@
   
   <br />
   
+  <%= link_to 'Reset password', reset_password_user_path(@user), data: { confirm: "Are you sure you want to reset #{@user.username} password?"}, class: 'btn btn-danger' %>
   <%= f.button :submit, class: 'btn btn-primary' %>
+  
 <% end %>
