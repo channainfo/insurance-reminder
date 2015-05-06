@@ -2,10 +2,11 @@ require 'csv'
 class Call < ActiveRecord::Base
   include VerboiceParameterize
 
-  validates :kind, presence: true
+  validates :kind, :od_id, presence: true
   has_many :recalls, class_name: "Call", foreign_key: 'main_id'
   belongs_to :main, class_name: "Call", counter_cache: true
   belongs_to :client, counter_cache: true
+  belongs_to :od, class_name: "OperationalDistrict"
 
   STATUS_PENDING = "Pending"
   STATUS_FAILED  = "Failed"

@@ -73,7 +73,7 @@ class CallsController < ApplicationController
   private
 
   def protected_params
-    params.require(:call).permit(:phone_number, :family_code, :full_name, :expiration_date)
+    params.require(:call).permit(:od_id, :phone_number, :family_code, :full_name, :expiration_date)
   end
 
   def authenticate_spa_service!
