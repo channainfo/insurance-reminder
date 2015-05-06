@@ -18,6 +18,7 @@
       <td>Login</td>
       <td>Full name</td>
       <td>Role</td>
+      <td>Organization</td>
       <td width='150'>Action</td>
     </tr>
   </thead>
@@ -28,6 +29,7 @@
         <td><%= user.username %></td>
         <td><%= user.name %></td>
         <td><%= user.role %></td>
+        <td><%= user.get_organizations[0].name unless user.admin? %></td>
         <td>
           <% unless user.admin? %>
             <%= link_to edit_user_path(user), class: 'btn btn-xs btn-primary' do %>

@@ -104,7 +104,9 @@
     <% @calls.each_with_index do |call, index| %>
       <tr>
         <td>
-          <input type="checkbox" class="checkDisabled" value="<%= call.id %>">
+          <% if call.status == Call::STATUS_RETRIEVED %>
+            <input type="checkbox" class="checkDisabled" value="<%= call.id %>">
+          <% end %>
         </td>
         <td><%= call.family_code %></td>
         <td><%= call.full_name %></td>

@@ -14,7 +14,7 @@ class OrganizationsController < ApplicationController
 
   def create
     @organization = Organization.new(organization_params)
-    errors = validate_existing_od params[:organization]["ods"]
+    errors = validate_existing_od params[:organization]["ods"], nil
     if errors["status"]
       if @organization.save
         redirect_to organizations_url, notice: 'Organization was successfully created.'
@@ -32,16 +32,28 @@ class OrganizationsController < ApplicationController
 
   def update
     @organization = Organization.find(params[:id])
-    if @organization.update(organization_params)
-      redirect_to organizations_url, notice: 'Operational district was successfully updated.'
+    errors = validate_existing_od params[:organization]["ods"], @organization.id
+    if errors["status"]
+      if @organization.update(organization_params)
+        redirect_to organizations_url, notice: 'Organization was successfully updated.'
+      else
+        render :edit
+      end
     else
+      errors["errors"].each do |error|
+        @organization.errors.add(:ods, error)
+      end
       render :edit
     end
   end
 
   def destroy
-    @organization.destroy
-    redirect_to organizations_url, notice: 'Operational district was successfully destroyed.'
+    @organization = Organization.find(params[:id])
+    if @organization.destroy!
+      redirect_to organizations_url, notice: 'Organization was successfully destroyed.'
+    else
+      redirect_to organizations_url, errors: 'Organization was not successfully destroyed.'
+    end
   end
 
   private
@@ -53,8 +65,9 @@ class OrganizationsController < ApplicationController
       params.require(:organization).permit(:name, :ods => [])
     end
 
-    def validate_existing_od ods
-      orgs = Organization.all
+    def validate_existing_od ods, ignor_org_id
+      orgs = Organization.where("id <> ?", ignor_org_id) if ignor_org_id.present?
+      orgs = Organization.all unless ignor_org_id.present?
       result = {}
       result["errors"] = []
       result["status"] = true
