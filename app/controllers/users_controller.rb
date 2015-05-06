@@ -97,7 +97,7 @@ class UsersController < ApplicationController
   end
 
   def protected_basic_params
-    params.require(:user).permit(:password, :password_confirmation, :role, :name, :ods => [], :organizations => [])
+    params.require(:user).permit(:role, :name, :ods => [], :organizations => [])
   end
 
 end
