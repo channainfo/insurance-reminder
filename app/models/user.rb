@@ -102,6 +102,10 @@ class User < ActiveRecord::Base
     return orgs
   end
 
+  def get_ods_id
+    get_ods.pluck(:id)
+  end
+
   def get_ods_external_code
     return get_ods.pluck(:external_id)
   end

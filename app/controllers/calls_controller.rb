@@ -4,10 +4,10 @@ class CallsController < ApplicationController
 
   before_action :authenticate_spa_service!, only: [:new]
 
+  before_action :fetch_calls, only: [:index, :download_csv]
+
   def index
-    @calls = Call.main_calls.includes(:client).order('calls.created_at DESC')
-    @calls = @calls.my_ods current_user.get_ods_external_code
-    @calls = @calls.search(params).page(params[:page])
+    @calls = @calls.page(params[:page])
     @data_by_status = count_by_status @calls
   end
 
@@ -42,7 +42,8 @@ class CallsController < ApplicationController
   end
 
   def download_csv
-    Call.main_calls.includes(:client).order('calls.created_at DESC').search(params).to_csv
+    @calls.to_csv
+
     send_file Call.csv_file, :type => 'text/csv'
   end
 
@@ -93,4 +94,11 @@ class CallsController < ApplicationController
     end
     return data
   end
+
+  def fetch_calls
+    @calls = Call.main_calls.includes(:client).order('calls.created_at DESC')
+    @calls = @calls.my_ods current_user.get_ods_id
+    @calls = @calls.search(params)
+  end
+
 end
