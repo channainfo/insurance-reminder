@@ -1,12 +1,5 @@
 <%= simple_form_for(@organization, html: {class: 'form form-inline'}) do |f| %>
 
-  <div class="form-inputs">
-    <div class='row input-row'>
-      <%= f.input :name %>
-    </div>
-  </div>
-
-  <%= label_tag :ods, raw("<h4>Operational District</h4>") %>
   <% if @organization.errors.any?%>
     <div class="alert alert-danger">
       <h4><%= pluralize(@organization.errors.count, "error") %> prohibited this post from being saved:</h4>
@@ -18,6 +11,13 @@
     </div>
   <% end %>
 
+  <div class="form-inputs">
+    <div class='row input-row'>
+      <%= f.input :name %>
+    </div>
+  </div>
+
+  <%= label_tag :ods, raw("<h4>Operational District</h4>") %>
   <% current_user.get_ods.each do |od|%>
     <div class="funkyradio">
         <div class="funkyradio-default">
