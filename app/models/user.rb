@@ -8,6 +8,9 @@ class User < ActiveRecord::Base
   validates :password, presence: true
   validates :password, confirmation: true
 
+  validates :organizations, presence: true, if: :operator?
+  validates :ods, presence: true, if: :user?
+
   before_save :downcase_username!
 
   ROLE_ADMIN = "Admin"

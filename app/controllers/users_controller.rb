@@ -8,9 +8,13 @@ class UsersController < ApplicationController
   end
   
   def create
+    params[:user][:organizations] = [current_user.organizations.first] if current_user.operator? and params[:user][:role] == User::ROLE_OPERATOR
+
     @user = User.new protected_params
-    errors_org = validate_existing Organization, [params[:user]["organizations"]], params[:user]["role"]
-    errors_od = validate_existing OperationalDistrict, [params[:user]["ods"]], params[:user]["role"]
+
+    errors_org = validate_existing Organization, [params[:user][:organizations]], params[:user][:role]
+    errors_od = validate_existing OperationalDistrict, [params[:user][:ods]], params[:user][:role]
+    
     if errors_org["status"] and errors_od["status"]
       if @user.save
         redirect_to users_path, notice: 'User has been created'
@@ -31,6 +35,11 @@ class UsersController < ApplicationController
 
   def update
     @user = User.find(params[:id])
+
+    if current_user.operator? and params[:user][:role] == User::ROLE_USER
+      @user.ods = [] unless params[:user][:ods].present?
+    end
+
     if @user.update_attributes(protected_basic_params)
       redirect_to users_path, notice: 'User has been updated'
     else
