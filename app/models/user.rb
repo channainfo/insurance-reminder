@@ -40,6 +40,10 @@ class User < ActiveRecord::Base
     where(["id != ?", user.id])
   end
 
+  def self.except_role role
+    where(['role != ?', role])
+  end
+
   def get_ods
     if self.role == ROLE_ADMIN
       return OperationalDistrict.all
@@ -96,12 +100,12 @@ class User < ActiveRecord::Base
 
   def self.get_involved_users user
     if user.role == ROLE_ADMIN
-      users = User.all
+      users = User.except_role ROLE_USER
     elsif user.role == ROLE_OPERATOR
       orgs = Organization.find user.organizations.first
       users = []
-      operators = User.all.select { |m| m.organizations.include? orgs.id}
-      users = users.concat operators
+      operators = User.all.select { |m| m.organizations.include? orgs.id.to_s }
+      users.concat operators
       od_users = []
       orgs.ods.each do |od|
         one_od_users = User.all.select { |m| m.ods.include? od}
@@ -117,6 +121,10 @@ class User < ActiveRecord::Base
   def get_roles
     return [User::ROLE_ADMIN, User::ROLE_OPERATOR] if admin?
     return [User::ROLE_USER, User::ROLE_OPERATOR] if operator?
+  end
+
+  def is?(user)
+    self.id == user.id
   end
 
   private

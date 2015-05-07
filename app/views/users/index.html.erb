@@ -29,14 +29,16 @@
         <td><%= user.username %></td>
         <td><%= user.name %></td>
         <td><%= user.role %></td>
-        <td><%= user.get_organizations[0].name unless user.admin? %></td>
+        <td><%= user.try(:get_organizations)[0].try(:name) unless user.admin? %></td>
         <td>
           <% unless user.admin? %>
             <%= link_to edit_user_path(user), class: 'btn btn-xs btn-primary' do %>
               <i class='glyphicon glyphicon-pencil'> </i> edit
             <% end %>
-            <%= link_to user_path(user), method: :delete, data: { confirm: 'Are you sure, you want to delete?'} , class: 'btn btn-xs btn-danger' do %>
-              <i class='glyphicon glyphicon-minus'> </i> delete
+            <% unless user.is?(current_user) %>
+              <%= link_to user_path(user), method: :delete, data: { confirm: 'Are you sure, you want to delete?'} , class: 'btn btn-xs btn-danger' do %>
+                <i class='glyphicon glyphicon-minus'> </i> delete
+              <% end %>
             <% end %>
           <% end %>
         </td>
