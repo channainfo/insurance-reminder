@@ -5,8 +5,13 @@ class User < ActiveRecord::Base
   validates :username, presence: true, uniqueness: true
   validates :role, presence: true
 
-  validates :password, presence: true
+  validates :password, presence: true, on: :create
   validates :password, confirmation: true
+
+  attr_accessor :old_password
+
+  validates :organizations, presence: true, if: :operator?
+  validates :ods, presence: true, if: :user?
 
   before_save :downcase_username!
 
@@ -16,6 +21,24 @@ class User < ActiveRecord::Base
 
   serialize :organizations, Array
   serialize :ods, Array
+
+  def reset_password_to new_password
+    self.password = new_password
+
+    save
+  end
+
+  def change_password old_password, new_password, new_password_confirmation
+    if self.authenticate(old_password)
+      self.password = new_password
+      self.password_confirmation = new_password_confirmation
+
+      save
+    else
+      errors.add(:old_password, 'does not matched')
+      false
+    end
+  end
 
   def self.authenticate(username, password)
     user = User.find_by!(username: username.downcase)
@@ -38,6 +61,10 @@ class User < ActiveRecord::Base
 
   def self.except(user)
     where(["id != ?", user.id])
+  end
+
+  def self.except_role role
+    where(['role != ?', role])
   end
 
   def editable? user
@@ -78,6 +105,10 @@ class User < ActiveRecord::Base
     return orgs
   end
 
+  def get_ods_id
+    get_ods.pluck(:id)
+  end
+
   def get_ods_external_code
     return get_ods.pluck(:external_id)
   end
@@ -99,12 +130,12 @@ class User < ActiveRecord::Base
 
   def self.get_involved_users user
     if user.role == ROLE_ADMIN
-      users = User.all
+      users = User.except_role ROLE_USER
     elsif user.role == ROLE_OPERATOR
       orgs = Organization.find user.organizations.first
       users = []
-      operators = User.all.select { |m| m.organizations.include? orgs.id}
-      users = users.concat operators
+      operators = User.all.select { |m| m.organizations.include? orgs.id.to_s }
+      users.concat operators
       od_users = []
       orgs.ods.each do |od|
         one_od_users = User.all.select { |m| m.ods.include? od}
@@ -122,6 +153,10 @@ class User < ActiveRecord::Base
     return [User::ROLE_USER, User::ROLE_OPERATOR] if operator?
   end
 
+  def is?(user)
+    self.id == user.id
+  end
+  
   private
 
   def downcase_username!

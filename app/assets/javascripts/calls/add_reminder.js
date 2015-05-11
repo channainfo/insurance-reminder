@@ -42,20 +42,26 @@ handleAddReminder = function(){
 function submit() {
   $alert = $("#alert-add-reminder");
   $alert.hide();
+
+  var odId = $("#call_od_id").val();
+  if(odId == null || odId == "") {
+    showNotification("alert", "OD can't be blank");
+    return;
+  };
   
-  var phoneNumber= $("#call_phone_number").val();
+  var phoneNumber = $("#call_phone_number").val();
   if(phoneNumber == null || phoneNumber == "") {
     showNotification("alert", "Phone number can't be blank");
     return;
   };
 
-  var familyCode= $("#call_family_code").val();
+  var familyCode = $("#call_family_code").val();
   if(familyCode == null || familyCode == "") {
     showNotification("alert", "Family code can't be blank");
     return;
   };
 
-  var fullName= $("#call_full_name").val();
+  var fullName = $("#call_full_name").val();
 
   var expirationDate= $("#call_expiration_date").val();
   if(!isDateFormat(expirationDate)) {
@@ -73,6 +79,7 @@ function submit() {
 
   var data = {
     call: {
+      od_id: odId,
       phone_number: phoneNumber,
       family_code: familyCode,
       full_name: fullName,

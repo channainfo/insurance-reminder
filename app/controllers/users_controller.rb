@@ -8,9 +8,13 @@ class UsersController < ApplicationController
   end
   
   def create
+    params[:user][:organizations] = [current_user.organizations.first] if current_user.operator? and params[:user][:role] == User::ROLE_OPERATOR
+
     @user = User.new protected_params
-    errors_org = validate_existing Organization, [params[:user]["organizations"]], params[:user]["role"]
-    errors_od = validate_existing OperationalDistrict, [params[:user]["ods"]], params[:user]["role"]
+
+    errors_org = validate_existing Organization, [params[:user][:organizations]], params[:user][:role]
+    errors_od = validate_existing OperationalDistrict, [params[:user][:ods]], params[:user][:role]
+    
     if errors_org["status"] and errors_od["status"]
       if @user.save
         redirect_to users_path, notice: 'User has been created'
@@ -31,6 +35,11 @@ class UsersController < ApplicationController
 
   def update
     @user = User.find(params[:id])
+
+    if current_user.operator? and params[:user][:role] == User::ROLE_USER
+      @user.ods = [] unless params[:user][:ods].present?
+    end
+
     if @user.update_attributes(protected_basic_params)
       redirect_to users_path, notice: 'User has been updated'
     else
@@ -44,6 +53,31 @@ class UsersController < ApplicationController
       redirect_to users_path, notice: 'User has been deleted'
     else
       redirect_to users_path, alert: "Fail to delete #{@user.name}"
+    end
+  end
+
+  def profile
+  end
+
+  def change_password
+    old_password = params[:user][:old_password]
+    password = params[:user][:password]
+    password_confirmation = params[:user][:password_confirmation]
+
+    if current_user.change_password(old_password, password, password_confirmation)
+      flash.now.notice = 'Your password has been changed successfully'
+    else
+      flash.now.alert = current_user.errors.full_messages.first
+    end
+    render :profile
+  end
+
+  def reset_password
+    @user = User.find(params[:id])
+    @random_password = SecureRandom.hex(3)
+    if @user.reset_password_to(@random_password)
+    else
+      render :edit
     end
   end
 
@@ -72,7 +106,7 @@ class UsersController < ApplicationController
   end
 
   def protected_basic_params
-    params.require(:user).permit(:password, :password_confirmation, :role, :name, :ods => [], :organizations => [])
+    params.require(:user).permit(:role, :name, :ods => [], :organizations => [])
   end
 
 end

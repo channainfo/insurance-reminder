@@ -26,6 +26,7 @@
 //= require shared/key_input
 //= require shared/collasable-link
 //= require shared/date
+//= require shared/hidden-content
 
 //= require settings/form
 //= require calls/add_reminder

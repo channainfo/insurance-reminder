@@ -7,7 +7,7 @@
 
   <div class="panel-body" style='padding: 10px 0px;'>
     <%= form_tag '/search', method: 'GET' do |f| %>
-      
+
       <div class='input-row col-lg-2'>
         <%= label_tag :family_code %>
         <%= text_field_tag :family_code, params[:family_code], class: 'form-control' %>
@@ -87,6 +87,7 @@
   <thead>
     <tr>
       <td></td>
+      <td>OD</td>
       <td>Family code</td>
       <td>Full name</td>
       <td>Call status</td>
@@ -108,6 +109,7 @@
             <input type="checkbox" class="checkDisabled" value="<%= call.id %>">
           <% end %>
         </td>
+        <td><%= call.try(:od).try(:name) %></td>
         <td><%= call.family_code %></td>
         <td><%= call.full_name %></td>
         <td><%= call.status %></td>

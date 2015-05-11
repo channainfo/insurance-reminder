@@ -19,19 +19,28 @@
             <span class='error'>*</span>
             <%= text_field_tag 'call[phone_number]', '', class: 'form-control required' %>
           </div>
+          
           <div class='form-group'>
             <%= label_tag :family_code, 'Family code', class: 'required' %>
             <span class='error'>*</span>
             <%= text_field_tag 'call[family_code]', '', class: 'form-control required' %>
           </div>
+
           <div class='form-group'>
             <%= label_tag :full_name %>
             <%= text_field_tag 'call[full_name]', '', class: 'form-control required' %>
           </div>
+
           <div class='form-group'>
             <%= label_tag :expiration_date, 'Expiration date', class: 'required' %>
             <span class='error'>*</span>
             <%= text_field_tag 'call[expiration_date]', '', class: 'form-control date-picker required' %>
+          </div>
+
+          <div class='form-group'>
+            <%= label_tag :od, 'OD', class: 'required' %>
+            <span class='error'>*</span>
+            <%= select_tag 'call[od_id]', options_from_collection_for_select(current_user.get_ods, "id", "name"), class: 'form-control required' %>
           </div>
 
           <div class='form-group'>

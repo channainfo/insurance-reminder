@@ -2,10 +2,11 @@ require 'csv'
 class Call < ActiveRecord::Base
   include VerboiceParameterize
 
-  validates :kind, presence: true
+  validates :kind, :od_id, presence: true
   has_many :recalls, class_name: "Call", foreign_key: 'main_id'
   belongs_to :main, class_name: "Call", counter_cache: true
   belongs_to :client, counter_cache: true
+  belongs_to :od, class_name: "OperationalDistrict"
 
   STATUS_PENDING = "Pending"
   STATUS_FAILED  = "Failed"
@@ -86,7 +87,6 @@ class Call < ActiveRecord::Base
       
       queued_calls = []
       Call.where("status = ?", Call::STATUS_RETRIEVED).each do |c|
-        p c
         od = OperationalDistrict.where("external_id = ?", c.od_id)
         to = from_date + (od[0].od_setting.day_expired_call.to_i - 1).days
         if to > c.expiration_date
@@ -131,7 +131,7 @@ class Call < ActiveRecord::Base
   end
 
   def mark_as_error!
-    status = Call::STATUS_ERROR
+    self.status = Call::STATUS_ERROR
     save!
     if main
       main.status = Call::STATUS_ERROR
@@ -140,7 +140,7 @@ class Call < ActiveRecord::Base
   end
 
   def mark_as_success!
-    status = Call::STATUS_SUCCESS
+    self.status = Call::STATUS_SUCCESS
     save!
     if main
       main.status = Call::STATUS_SUCCESS

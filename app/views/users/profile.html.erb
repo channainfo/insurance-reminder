@@ -1,0 +1,23 @@
+<%= page_title "Change password" %>
+
+<h3 class='page-header'>Change Password</h3>
+
+<%= simple_form_for(current_user, url: change_password_users_path, method: :put, html: { class: 'form form-inline'}) do |f| %>
+  <div class='input-row w600'>
+    <%= f.input :username, input_html: { readonly: true } %>
+  </div>
+
+  <div class='input-row'>
+    <%= f.input :old_password, placeholder: 'Current password' %>
+  </div>
+  
+  <div class='input-row'>
+    <%= f.input :password, placeholder: 'New password' %>
+  </div>
+  
+  <div class='input-row'>
+    <%= f.input :password_confirmation, placeholder: 'New password confirmation' %>
+  </div>
+
+  <%= f.button :submit, 'Save', class: 'btn btn-primary' %>
+<% end %>
