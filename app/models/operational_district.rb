@@ -38,4 +38,6 @@ class OperationalDistrict < ActiveRecord::Base
       :operational_district_id => self.id
     )
   end
+
+  
 end

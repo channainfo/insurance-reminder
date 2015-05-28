@@ -71,6 +71,49 @@ class CallsController < ApplicationController
     render text: "Call with id " + ids.join(",") + " was successfully disabled."
   end
 
+  def upload
+  end
+
+  def preview
+    data = params[:upload_file]
+    @records = CSV.foreach(data.path,{:headers=>:first_row})
+    @records = validate_record @records
+    session[:call_list] = data.path
+  end
+
+  def import
+    @num_errors = 0
+    @num_success = 0
+    CSV.foreach(session[:call_list],{:headers=>:first_row}).each do |record|
+      error = false
+      Call::TEMPLATE_HEADER.each do |item|
+        status = Call.validate_data(item, record[item])
+        error = status[0] unless error
+      end
+      unless error
+        od = OperationalDistrict.find_by_code record['OD Code']
+        option = {:phone_number => record['Phone number'], :family_code => record['Family code'], :full_name => record['Full name'], :expiration_date => record['Expiration date'], :od_id => od.id}
+        options = option.merge(kind: Call::KIND_MANUAL, status: Call::STATUS_ERROR)
+        call = Call.new options
+        if call.save
+          begin
+            Service::Verboice.connect.enqueue!(call)
+            @num_success = @num_success + 1
+          rescue JSON::ParserError
+            render json: {status: 0, message: "Could not connect to verboice"}
+          end
+        end
+      else
+        @num_errors = @num_errors + 1
+      end
+    end
+  end
+
+  def download_template
+    Call.get_template_file
+    send_file Call.template_file, :type => 'text/csv'
+  end
+
   private
 
   def protected_params
@@ -99,6 +142,22 @@ class CallsController < ApplicationController
     @calls = Call.main_calls.includes(:client).order('calls.created_at DESC')
     @calls = @calls.my_ods current_user.get_ods_id
     @calls = @calls.search(params)
+  end
+
+  def validate_record records
+    list = []
+    records.each do |record|
+      Call::TEMPLATE_HEADER.each do |item|
+        status = Call.validate_data(item, record[item])
+        unless record["error"]
+          record["error"] = status[0]
+          @error_existed = true
+        end
+        record["error-#{item}"] = status[1]
+      end
+      list.push record
+    end
+    return list
   end
 
 end

@@ -25,7 +25,11 @@ Rails.application.routes.draw do
     get :reset_password, on: :member
   end
 
-  resources :organizations
+  resources :organizations do
+    member do 
+      put 'update_settings'
+    end
+  end
 
   resources :call_logs, only: [:index]
   resources :calls, only: [:index, :new, :create] do
@@ -35,7 +39,10 @@ Rails.application.routes.draw do
 
     collection do
       get 'download_csv'
-
+      get 'download_template'
+      get 'upload'
+      post 'preview'
+      get 'import'
       post :notify_call_started
       post :notify_call_finished
     end

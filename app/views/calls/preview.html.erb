@@ -1,0 +1,63 @@
+<div class="container">
+  <div class="row bs-wizard" style="border-bottom:0;">
+    <div class="col-xs-4 bs-wizard-step complete">
+      <div class="text-center bs-wizard-stepnum">Step 1</div>
+      <div class="progress"><div class="progress-bar"></div></div>
+      <a href="<%= upload_calls_path() %>" class="bs-wizard-dot"></a>
+      <div class="bs-wizard-info text-center">Upload file.</div>
+    </div>
+    
+    <div class="col-xs-4 bs-wizard-step active"><!-- complete -->
+      <div class="text-center bs-wizard-stepnum">Step 2</div>
+      <div class="progress"><div class="progress-bar"></div></div>
+      <a href="#" class="bs-wizard-dot"></a>
+      <div class="bs-wizard-info text-center">Preview the upload data</div>
+    </div>
+    
+    <div class="col-xs-4 bs-wizard-step disabled"><!-- complete -->
+      <div class="text-center bs-wizard-stepnum">Step 3</div>
+      <div class="progress"><div class="progress-bar"></div></div>
+      <a href="#" class="bs-wizard-dot"></a>
+      <div class="bs-wizard-info text-center">Finish</div>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <h3>Preview List of Call Reminder</h3>
+  <div class="panel-body">
+    <table class='table table-strip table-hover'>
+      <thead>
+        <tr>
+          <% Call::TEMPLATE_HEADER.each do |header| %>
+            <th><%= header %></th>
+          <% end %>
+        </tr>
+      </thead>
+      <tbody>
+        <% @records.each do |row| %>
+          <% unless row["error"] %>
+            <tr>
+          <% else %>
+            <tr class="danger">
+          <% end %>
+            <% Call::TEMPLATE_HEADER.each do |header| %>
+              <% unless row["error-#{header}"].empty? %>
+                <td><%= row[header] %> <span class="badge" style="padding:5px;margin-right:5px;"> <%= row["error-#{header}"] %> </span></td>
+              <% else %>
+                <td><%= row[header] %></td>
+              <% end %>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  There are <b>3</b> records that can not import to the system. If you wish to ignore the error records and import only the valide call to the system, click button Proceed Import to start the import process.
+  <div class='clearfix' style="padding-bottom: 10px;">
+    <div class='pull-right' style='margin-top: 0px;padding-right:15px;'>
+      <%= link_to import_calls_path(), class: 'btn btn- btn-primary' do %>
+        <i class='glyphicon glyphicon-log-in'> </i> Proceed Import
+      <% end %>
+    </div>
+  </div>
+</div> <!-- /container -->

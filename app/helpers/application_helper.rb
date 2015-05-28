@@ -45,4 +45,8 @@ module ApplicationHelper
     zone.strftime(format)
   end
 
+  def valid_row row
+    true
+  end
+
 end

@@ -72,6 +72,9 @@
     <%= paginate @calls, theme: 'twitter-bootstrap-3' %>
   </div>
   <div class='pull-right' style='margin-top: 15px;'>
+    <%= link_to upload_calls_path(), class: 'btn btn- btn-primary' do %>
+      <i class='glyphicon glyphicon-upload'> </i> Upload CSV
+    <% end %>
     <%= link_to download_csv_calls_path(app_params), class: 'btn btn- btn-primary' do %>
       <i class='glyphicon glyphicon-download-alt'> </i> Download CSV
     <% end %>

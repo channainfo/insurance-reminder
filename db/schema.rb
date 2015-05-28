@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150420082239) do
+ActiveRecord::Schema.define(version: 20150527041538) do
 
   create_table "calls", force: :cascade do |t|
     t.integer  "client_id",        limit: 4
@@ -76,12 +76,33 @@ ActiveRecord::Schema.define(version: 20150420082239) do
     t.datetime "updated_at",                  null: false
   end
 
+  create_table "organization_settings", force: :cascade do |t|
+    t.integer  "project_id",      limit: 4
+    t.integer  "callflow_id",     limit: 4
+    t.integer  "organization_id", limit: 4
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "schedule_id",     limit: 4
+  end
+
+  add_index "organization_settings", ["organization_id"], name: "index_organization_settings_on_organization_id", using: :btree
+
   create_table "organizations", force: :cascade do |t|
     t.string   "name",       limit: 255
     t.text     "ods",        limit: 65535
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
   end
+
+  create_table "sessions", force: :cascade do |t|
+    t.string   "session_id", limit: 255,   null: false
+    t.text     "data",       limit: 65535
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "sessions", ["session_id"], name: "index_sessions_on_session_id", unique: true, using: :btree
+  add_index "sessions", ["updated_at"], name: "index_sessions_on_updated_at", using: :btree
 
   create_table "settings", force: :cascade do |t|
     t.string   "var",        limit: 255,   null: false

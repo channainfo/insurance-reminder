@@ -1,0 +1,90 @@
+<script type='text/javascript' >
+  window.call_flows = <%= @parameters[:call_flows].to_json.html_safe %>
+  $(function(){
+    handleProjectChange()
+  })
+
+  function handleProjectChange(){
+    $("#project").on('change', function(){
+      $this = $(this);
+      var project_id = $this.val()
+
+      var project_call_flows = $.grep(call_flows, function(call_flow, index){
+          if( call_flow.project_id == project_id)
+            return call_flow
+      })
+
+      update_select('#call_flow', project_call_flows)
+      $.ajax({
+        method: 'GET',
+        dataType: 'json',
+        url: '/schedules',
+        data: {project: project_id},
+        success: function(response){
+          window.schedules = response
+          update_select('#schedule', schedules)
+          setNotification("notice", "Retrieved schedule successfully")
+        },
+        error: function(){
+          window.schedules = []
+          update_select('#schedule', schedules)
+          setNotification("alert", "Failed to retrieved schedules, make sure you are able to connect to Verboice")
+        }
+      })
+    })
+  }
+
+  function update_select(selector, resultSets) {
+    var $select = $(selector)
+    $select.find("option[value!='']").remove()
+
+    $.each(resultSets, function(index, item){
+      var $option = $("<option>" + item.name + "</option>").attr('value', item.id)
+      $select.append($option)
+    })
+  }
+</script>
+<%= form_tag(update_settings_organization_path(@organization), method: :put, class: 'form form-inline') do %>
+  <% 
+    project_options   = @parameters[:projects].map{|p| [ p['name'], p['id'] ] }
+    call_flow_options = []
+    @parameters[:call_flows].each do |f|
+      call_flow_options << [ f['name'], f['id'] ] if f['project_id'].to_s == @organization.organization_setting.project_id.to_s
+    end
+
+    schedule_options = @parameters[:schedules].map{|c| [ c['name'], c['id'] ] }
+
+  %>
+
+  <div class="form-group">
+    <%= label_tag :project, 'Project', class: 'col-sm-2'  %>
+    <%= select_tag :project, options_for_select(project_options, @organization.organization_setting[:project_id]),
+                   include_blank: 'Select a project',
+                   class: 'form-control col-sm-3', :required => "required" %>
+  </div>
+
+  <br />
+  <br />
+
+  <div class='form-group'>
+    <%= label_tag :call_flow, 'Call flow', class: 'col-sm-2'  %>
+    <%= select_tag :call_flow, options_for_select(call_flow_options, @organization.organization_setting[:callflow_id]), include_blank: 'Select a call flow', class: 'form-control s-width', :required => "required" %>
+  </div>
+
+  <br />
+  <br />
+
+  <div class='form-group'>
+    <%= label_tag :schedule, 'Schedule', class: 'col-sm-2' %>
+    <%= select_tag :schedule, options_for_select(schedule_options, Setting[:schedule]), class: 'form-control s-width', :required => "required" %>
+  </div>
+
+  <br />
+  <br />
+
+  <div class="form-group">
+    <label class='col-sm-2'> </label>
+    <%= submit_tag 'Save', class: "btn btn-primary" %>
+  </div>
+
+<% end %>

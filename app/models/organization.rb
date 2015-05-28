@@ -3,8 +3,10 @@ class Organization < ActiveRecord::Base
   validates :name, uniqueness: { case_sensitive: false }
 
   serialize :ods, Array
+  has_one :organization_setting
 
   before_validation :uniqueness_ods
+  after_create :create_setting
 
   def self.except(org_id)
     org_id.nil? ? all : where("id != ?", org_id)
@@ -15,6 +17,15 @@ class Organization < ActiveRecord::Base
     orgs = orgs.where(['name = ?', options[:name]]) if options[:name].present?
     orgs = orgs.where(['id in (?)', options[:list_orgs]]) if options[:list_orgs].present?
     orgs
+  end
+
+  def create_setting
+    OrganizationSetting.create!(
+      :project_id => Setting[:project], 
+      :callflow_id => Setting[:call_flow], 
+      :organization_id => self.id,
+      :schedule_id => Setting[:schedule]
+    )
   end
 
   private

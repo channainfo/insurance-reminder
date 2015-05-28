@@ -10,6 +10,11 @@ class OrganizationsController < ApplicationController
 
   def edit
     @organization = Organization.find(params[:id])
+    @settings = @organization.organization_setting
+    unless @settings
+      @settings = @organization.create_setting
+    end
+    @parameters = verboice_parameters @settings.project_id
   end
 
   def create
@@ -42,7 +47,30 @@ class OrganizationsController < ApplicationController
     end
   end
 
+  def update_settings
+    @organization = Organization.find(params[:id])
+    @settings = @organization.organization_setting
+    @settings.update_attributes!( :project_id => params[:project], 
+                                  :callflow_id => params[:call_flow],
+                                  :schedule_id => params[:schedule]) if @settings
+    render :edit
+  end
+
   private
+
+  def verboice_parameters project_id
+    result = { channels: [], projects: [], call_flows: [], schedules: [] }
+
+    begin
+      result[:projects]   = Service::Verboice.connect().projects
+      result[:call_flows] = Service::Verboice.connect().call_flows
+      result[:schedules]  = Service::Verboice.connect().schedules(project_id) unless Setting[:project].blank?
+    rescue JSON::ParserError
+      flash.now.alert = " Failed to fetch some data from verboice"
+    end
+
+    result
+  end
 
   def organization_params
     params.require(:organization).permit(:name, :ods => [])

@@ -18,6 +18,8 @@ class Call < ActiveRecord::Base
   
   STATUSES = [STATUS_PENDING, STATUS_FAILED, STATUS_ERROR, STATUS_SUCCESS,STATUS_RETRIEVED,STATUS_DISABLED]
 
+  TEMPLATE_HEADER = ['Phone number', 'Family code', 'Full name', 'Expiration date', 'OD Code']
+
   KIND_AUTO = 1
   KIND_MANUAL = 2
 
@@ -60,8 +62,18 @@ class Call < ActiveRecord::Base
       end
     end
 
+    def get_template_file
+      CSV.open(template_file, 'wb') do |csv|
+        csv << TEMPLATE_HEADER
+      end
+    end
+
     def csv_file
       "#{Rails.root}/tmp/call.csv"
+    end
+
+    def template_file
+      "#{Rails.root}/tmp/template.csv"
     end
 
     def main_calls
@@ -95,6 +107,28 @@ class Call < ActiveRecord::Base
       end
       Service::Verboice.connect().bulk_enqueue!(queued_calls) unless queued_calls.empty?
     end
+  end
+
+  def get_call_flow
+    od = OperationalDistrict.where("id = ?", self.od_id)
+    org = Organization.all.select { |m| m.ods.include? od.first.id.to_s}
+    unless org.empty?
+      callflow_id = org.first.organization_setting ? org.first.organization_setting.callflow_id : Setting[:call_flow]
+    else
+      callflow_id = Setting[:call_flow]
+    end
+    return callflow_id
+  end
+
+  def get_schedule
+    od = OperationalDistrict.where("id = ?", self.od_id)
+    org = Organization.all.select { |m| m.ods.include? od.first.id.to_s}
+    unless org.empty?
+      callflow_id = org.first.organization_setting ? org.first.organization_setting.schedule_id : Setting[:schedule]
+    else
+      callflow_id = Setting[:schedule]
+    end
+    return callflow_id
   end
 
   def observe_main_status
@@ -152,4 +186,26 @@ class Call < ActiveRecord::Base
     kind == Call::KIND_AUTO ? 'Auto' : 'Manual'
   end
 
+  def self.validate_data(key, value)
+    error = false
+    message = ""
+    if value.nil? or value.empty?
+      error = true
+      message = "Can't be blank"
+    else
+      case key
+      when 'OD Code'
+        error = true unless OperationalDistrict.find_by_code value
+        message = "Unknown OD" if error
+      when 'Expiration date'
+        begin
+          Date.parse(value)
+        rescue ArgumentError
+          error = true
+          message = "Incorrect format(YY-mm-dd)"
+        end
+      end
+    end
+    [error, message]
+  end
 end

@@ -35,6 +35,7 @@ gem 'rails-timeago'
 
 gem 'rails-settings-cached'
 gem 'whenever', :require => false
+gem 'activerecord-session_store', github: 'rails/activerecord-session_store'
 
 # Use Unicorn as the app server
 # gem 'unicorn'

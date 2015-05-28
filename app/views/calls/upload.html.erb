@@ -1,0 +1,43 @@
+<div class="container">
+  <div class="row bs-wizard" style="border-bottom:0;">
+    <div class="col-xs-4 bs-wizard-step active">
+      <div class="text-center bs-wizard-stepnum">Step 1</div>
+      <div class="progress"><div class="progress-bar"></div></div>
+      <a href="<%= upload_calls_path() %>" class="bs-wizard-dot"></a>
+      <div class="bs-wizard-info text-center">Upload file.</div>
+    </div>
+    
+    <div class="col-xs-4 bs-wizard-step disabled"><!-- complete -->
+      <div class="text-center bs-wizard-stepnum">Step 2</div>
+      <div class="progress"><div class="progress-bar"></div></div>
+      <a href="#" class="bs-wizard-dot"></a>
+      <div class="bs-wizard-info text-center">Preview the upload data</div>
+    </div>
+    
+    <div class="col-xs-4 bs-wizard-step disabled"><!-- complete -->
+      <div class="text-center bs-wizard-stepnum">Step 3</div>
+      <div class="progress"><div class="progress-bar"></div></div>
+      <a href="#" class="bs-wizard-dot"></a>
+      <div class="bs-wizard-info text-center">Finish</div>
+    </div>
+  </div>
+</div>
+</div>
+<br />
+<div class="container">
+  <h3>Upload List of Call Reminder</h3>
+  <div class="panel-body">
+    You can download the template file from <%= link_to 'here', download_template_calls_path(@operational_district) %> to fill the data.
+    <!-- Standar Form -->
+    <h4>Select files from your computer</h4>
+    <%= form_tag(preview_calls_path(), method: "post", multipart: true) do %>
+      <div class="form-inline">
+        <div class="form-group">
+          <input type="file" name="upload_file" id="js-upload-files" multiple required>
+        </div>
+      </div>
+      <br />
+      <button type="submit" class="btn btn-sm btn-primary" id="js-upload-submit">Upload files</button>
+    <% end %>
+  </div>
+</div> <!-- /container -->
